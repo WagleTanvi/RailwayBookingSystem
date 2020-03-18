@@ -1,0 +1,28 @@
+CREATE DATABASE TrainDatabase;
+USE TrainDatabase;
+
+#SCHEMAS
+CREATE TABLE `users` (
+	`username` varchar(50) NOT NULL DEFAULT '',
+    `password` varchar(50) NOT NULL DEFAULT '',
+    `ssn` varchar(11),
+    `email` varchar(50),
+    `fname` varchar(50),
+    `lname` varchar(50),
+	`telephone` varchar(11),
+    `zipcode` varchar(5),
+    `city` varchar(20),
+    `state` varchar(2),
+    PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+# Insert dummy data 
+INSERT INTO `users` (`username`,`password`) VALUES ('tnw39','abc123');
+INSERT INTO `users` (`username`,`password`) VALUES ('bnd29','123abc');
+INSERT INTO `users` (`username`,`password`) VALUES ('wjt42','123');
+INSERT INTO `users` (`username`,`password`) VALUES ('vv199','abc');
+INSERT INTO `users` (`username`,`password`) VALUES ('zsm7','abc1234');
+
+# view users in database
+select * from users;
+
