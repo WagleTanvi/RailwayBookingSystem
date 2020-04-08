@@ -28,6 +28,7 @@
     	    		int x = ps.executeUpdate();
     	    		if (x == 1){
     	    			session.setAttribute("user", username);
+    	    			session.setAttribute("isUser", true); //!IMPORTANT: Currently assuming that all users logging in are users only.
     	    			response.sendRedirect("success.jsp");
     	    		}
      			}
@@ -35,7 +36,7 @@
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
      			    if (rs.next()) {
      			        session.setAttribute("user", username); // the username will be stored in the session
-     			       session.setAttribute("isUser", true); //!IMPORTANT: Currently assuming that all users logging in are users only.
+     			        session.setAttribute("isUser", true); //!IMPORTANT: Currently assuming that all users logging in are users only.
      			        response.sendRedirect("success.jsp");
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
