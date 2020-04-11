@@ -1,28 +1,94 @@
-CREATE DATABASE TrainDatabase;
-USE TrainDatabase;
+Use TrainDatabase;
+show tables;
 
-#SCHEMAS
+CREATE TABLE `train` (
+  `name_of_transit_line` varchar(50) DEFAULT NULL,
+  `number_of_seats` int(11) DEFAULT NULL,
+  `number_of_cars` int(11) DEFAULT NULL,
+  `train_id` int(11) NOT NULL,
+  PRIMARY KEY (`train_id`)
+);
+
+CREATE TABLE `station` (
+  `name` varchar(50) DEFAULT NULL,
+  `state_name` varchar(50) DEFAULT NULL,
+  `city_name` varchar(50) DEFAULT NULL,
+  `station_id` int NOT NULL,
+  PRIMARY KEY (`station_id`)
+);
+
+CREATE TABLE `transit_line`(
+	`tl_id` varchar(5),
+    `tl_name` varchar(50) DEFAULT NULL,
+    `origin_station_id` int NOT NULL,
+    `termin_station_id` int NOT NULL,
+    Primary Key (`tl_id`),
+    Foreign Key (`origin_station_id`) references `station` (`station_id`),
+    Foreign Key (`termin_station_id`) references `station` (`station_id`)
+);
+
+CREATE TABLE `train_schedule_assignment`(
+	`schedule_num` int,
+    `tl_id` varchar(5),
+    `train_id` int,
+     Primary Key (`schedule_num`),
+     Foreign Key (`tl_id`) references `transit_line` (`tl_id`),
+     Foreign Key (`train_id`) references `train` (`train_id`)
+);
+
+CREATE table `transit_line_route`(
+	route_id int,
+    tl_id varchar(5),
+    hop_number int,
+    direction varchar(10),
+    start_station_id int,
+    end_station_id int,
+    Primary Key (route_id),
+	Foreign Key (`tl_id`) references `transit_line` (`tl_id`),
+	Foreign Key (`start_station_id`) references `station` (`station_id`),
+    Foreign Key (`end_station_id`) references `station` (`station_id`)
+    
+);
+
+Create table `train_schedule_timings` (
+	schedule_num int,
+    route_id int,
+    departure_time time,
+    arrival_time time,
+    Primary Key (route_id, schedule_num),
+    Foreign Key (`schedule_num`) references `train_schedule_assignment` (`schedule_num`),
+    Foreign Key (`route_id`) references `transit_line_route` (`route_id`)
+);
+
 CREATE TABLE `users` (
-	`username` varchar(50) NOT NULL DEFAULT '',
-    `password` varchar(50) NOT NULL DEFAULT '',
-    `ssn` varchar(11),
-    `email` varchar(50),
-    `fname` varchar(50),
-    `lname` varchar(50),
-	`telephone` varchar(11),
-    `zipcode` varchar(5),
-    `city` varchar(20),
-    `state` varchar(2),
-    PRIMARY KEY (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `username` varchar(50) NOT NULL DEFAULT '',
+  `password` varchar(50) NOT NULL DEFAULT '',
+  `email` varchar(50) DEFAULT NULL,
+  `fname` varchar(50) DEFAULT NULL,
+  `lname` varchar(50) DEFAULT NULL,
+  `telephone` varchar(11) DEFAULT NULL,
+  `zipcode` varchar(5) DEFAULT NULL,
+  `city` varchar(20) DEFAULT NULL,
+  `state` varchar(2) DEFAULT NULL,
+  `role` enum('customer_service_rep','customer','administrator') DEFAULT NULL,
+  PRIMARY KEY (`username`)
+); 
 
-# Insert dummy data 
-INSERT INTO `users` (`username`,`password`) VALUES ('tnw39','abc123');
-INSERT INTO `users` (`username`,`password`) VALUES ('bnd29','123abc');
-INSERT INTO `users` (`username`,`password`) VALUES ('wjt42','123');
-INSERT INTO `users` (`username`,`password`) VALUES ('vv199','abc');
-INSERT INTO `users` (`username`,`password`) VALUES ('zsm7','abc1234');
-
-# view users in database
-select * from users;
-
+CREATE TABLE `fare` (
+  `fare_name` varchar(50) NOT NULL,
+  `fare_cost` double DEFAULT NULL,
+   PRIMARY KEY (`fare_name`)
+);
+Create table reservations (
+	rid int,
+    username varchar(50),
+    fare_name varchar(50),
+    schedule_num int,
+	class varchar(10),
+	date date,
+    booking_fee real,
+    Primary Key (rid),
+    Foreign Key (`schedule_num`) references `train_schedule_assignment` (`schedule_num`),
+    FOREIGN KEY (`username`) REFERENCES `users` (`username`),
+    FOREIGN KEY (`fare_name`) REFERENCES `fare` (`fare_name`)
+);
