@@ -92,3 +92,13 @@ Create table reservations (
     FOREIGN KEY (`username`) REFERENCES `users` (`username`),
     FOREIGN KEY (`fare_name`) REFERENCES `fare` (`fare_name`)
 );
+
+CREATE TABLE `messaging` (
+	`mid` int,
+	`username` varchar(50),
+	`role` enum('customer_service_rep','customer','administrator'),
+	`content` TEXT,
+	`answer` TEXT NOT NULL DEFAULT '',
+	PRIMARY KEY(`mid`),
+	FOREIGN KEY (`username`, `role`) REFERENCES `users` (`username`, `role`)
+);

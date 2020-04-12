@@ -2,7 +2,6 @@
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*" %>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
-
 <!DOCTYPE html>
 <html>
 
@@ -97,6 +96,7 @@
 	<%
 		//FOR THIS PAGE TO WORK, MAKE SURE TO LOG IN FIRST AT index.jsp.
 		//session.setAttribute("isUser", false); //UNCOMMENT THIS FOR ADMIN VIEW.
+		System.out.println("Role of current viewer: " + session.getAttribute("role"));
 	%>
     <h3>Messaging</h3>
     <input id="questionQuery" type="text" placeholder="Search for a question here!"></input>
@@ -118,11 +118,7 @@
        	<%
 			//isUser is referring to HandleLoginDetails.jsp.
 			//session.setAttribute is made there. It is used to determine weather the current person logged in is a user or not
-			if((Boolean)(session.getAttribute("isUser"))) {
-				%>
-  					<button>Reply To User (User Only)</button>
-				<%
-			} else {
+			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
 				%>
 					<button>Troubleshoot/Solve (Admin Only)</button>
 				<%
@@ -141,11 +137,7 @@
             imperdiet sed.
         </p>
        	<%
-			if((Boolean)(session.getAttribute("isUser"))) {
-				%>
-  					<button>Reply To User (User Only)</button>
-				<%
-			} else {
+			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
 				%>
 					<button>Troubleshoot/Solve (Admin Only)</button>
 				<%
@@ -164,11 +156,7 @@
             imperdiet sed.
         </p>
        	<%
-			if((Boolean)(session.getAttribute("isUser"))) {
-				%>
-  					<button>Reply To User (User Only)</button>
-				<%
-			} else {
+			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
 				%>
 					<button>Troubleshoot/Solve (Admin Only)</button>
 				<%
