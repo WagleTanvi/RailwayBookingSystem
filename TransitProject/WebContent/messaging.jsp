@@ -38,6 +38,10 @@
         div {
             padding: 10px 15px 10px 15px;
         }
+        
+        span {
+        	color: #AC80A0;
+        }
 
         .posts {
             border: 1px solid black;
@@ -74,6 +78,40 @@
             margin: 0.5% 0px 0.5% 0px;
         }
 
+        #forumPost {
+            width: 80%;
+            height: 80%;
+            background-color: black;
+            position: absolute;
+            left: 10%;
+            top: 10%;
+            display: none;
+        }
+
+        #forumPost input {
+            left: 5%;
+            position: absolute;
+            top: 5%;
+            font-size: 25px;
+        }
+
+        #forumPost textarea {
+            position: absolute;
+            left: 5%;
+            top: 15%;
+            width: 90%;
+            height: 70%;
+            font-size: 20px;
+        }
+
+        #forumPost button {
+            position: absolute;
+            background-color: #008CBA;
+            width: 20%;
+            bottom: 3%;
+            left: 40%;
+        }
+
         #questionQuery {
             width: 355px;
             height: 30px;
@@ -87,85 +125,83 @@
             width: 20%;
         }
     </style>
-    
-    <script>
-    </script>
 </head>
 
 <body>
-	<%
-		//FOR THIS PAGE TO WORK, MAKE SURE TO LOG IN FIRST AT index.jsp.
-		//session.setAttribute("isUser", false); //UNCOMMENT THIS FOR ADMIN VIEW.
-		System.out.println("Role of current viewer: " + session.getAttribute("role"));
-	%>
     <h3>Messaging</h3>
     <input id="questionQuery" type="text" placeholder="Search for a question here!"></input>
+    
+    <form action = messaging.jsp method="POST">
+    	<div id="forumPost">
+    		<input name="subject" id="questionQuery" type="text" placeholder="Subject"></input>
+    		<textarea name="content" placeholder="What's wrong?"></textarea>
+	        <button onClick="postToDB()">Post Question</button>
+	    </div>
+    </form>
+
 
     <div class="alert">
     	<h2>__TRANSIT LINE__ DELAYED __MINS__</h2>
     </div>
-    <div class="posts">
-       	<h2>Sample Post 1</h2>
-       	<p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Orci ac auctor augue mauris augue neque gravida in fermentum. Faucibus interdum posuere
-            lorem ipsum dolor sit. Mi tempus imperdiet nulla malesuada pellentesque elit eget. Cras semper auctor neque
-            vitae. Ipsum consequat nisl vel pretium. In nulla posuere sollicitudin aliquam. Enim praesent elementum
-            facilisis leo vel fringilla est. Fringilla est ullamcorper eget nulla facilisi etiam. Nisl pretium fusce id
-            velit ut tortor pretium. Tristique nulla aliquet enim tortor at auctor. Est placerat in egestas erat
-            imperdiet sed.
-        </p>
-       	<%
-			//isUser is referring to HandleLoginDetails.jsp.
-			//session.setAttribute is made there. It is used to determine weather the current person logged in is a user or not
-			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
-				%>
-					<button>Troubleshoot/Solve (Admin Only)</button>
-				<%
-			}
-		%>
-    </div>
-    <div class="posts">
-       	<h2>Sample Post 2</h2>
-       	<p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Orci ac auctor augue mauris augue neque gravida in fermentum. Faucibus interdum posuere
-            lorem ipsum dolor sit. Mi tempus imperdiet nulla malesuada pellentesque elit eget. Cras semper auctor neque
-            vitae. Ipsum consequat nisl vel pretium. In nulla posuere sollicitudin aliquam. Enim praesent elementum
-            facilisis leo vel fringilla est. Fringilla est ullamcorper eget nulla facilisi etiam. Nisl pretium fusce id
-            velit ut tortor pretium. Tristique nulla aliquet enim tortor at auctor. Est placerat in egestas erat
-            imperdiet sed.
-        </p>
-       	<%
-			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
-				%>
-					<button>Troubleshoot/Solve (Admin Only)</button>
-				<%
-			}
-		%>
-    </div>
-    <div class="posts">
-       	<h2>Sample Post 3</h2>
-       	<p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-            dolore magna aliqua. Orci ac auctor augue mauris augue neque gravida in fermentum. Faucibus interdum posuere
-            lorem ipsum dolor sit. Mi tempus imperdiet nulla malesuada pellentesque elit eget. Cras semper auctor neque
-            vitae. Ipsum consequat nisl vel pretium. In nulla posuere sollicitudin aliquam. Enim praesent elementum
-            facilisis leo vel fringilla est. Fringilla est ullamcorper eget nulla facilisi etiam. Nisl pretium fusce id
-            velit ut tortor pretium. Tristique nulla aliquet enim tortor at auctor. Est placerat in egestas erat
-            imperdiet sed.
-        </p>
-       	<%
-			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
-				%>
-					<button>Troubleshoot/Solve (Admin Only)</button>
-				<%
-			}
-		%>
-    </div>
-    <button id="askQuestion">Ask a question</button>
     
-    
+    <%
+		//FOR THIS PAGE TO WORK, MAKE SURE TO LOG IN FIRST AT index.jsp
+		System.out.println("Role of current viewer: " + session.getAttribute("role"));
+		ApplicationDB db = new ApplicationDB();	
+		Connection con = db.getConnection();
+		Statement stmt = con.createStatement();
+		
+		String msgQuery = "SELECT * FROM messaging";
+		
+		ResultSet rs = stmt.executeQuery(msgQuery);
+		
+		System.out.println("Getting number of posts...");
+		int count = 0;
+		String postView = "";
+		while(rs.next()) {
+			System.out.println(rs.getInt("mid"));
+			
+			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
+				postView += "<div class=\"posts\">" + 
+										"<h2>" + rs.getString("subject") + " - " + "<span>" + rs.getString("user") + "</span>" + "&emsp;ticketID: " + rs.getInt("mid") + "</h2>" + 
+										"<p>" + rs.getString("content") + "</p>" +
+										"<button>Troubleshoot/Solve (Admin Only)</button>" + 
+				  				  "</div>";
+			} else {
+				postView += "<div class=\"posts\">" + 
+										"<h2>" + rs.getString("subject") + " - " + "<span>" + rs.getString("user") + "</span>" + "</h2>" + 
+										"<p>" + rs.getString("content") + "</p>" +
+								  "</div>";
+			}
+		}
+		
+		if(postView.length() == 0) {
+			out.println("<h3>No posts.</h3>");
+		} else {
+			out.println(postView);
+		}
+		
+	%>
+
+    <button id="askQuestion" onClick="questionPost()">Ask a question</button>
+    <script>
+    	function questionPost() {
+    		document.getElementById("forumPost").style.display = "block";
+    	}
+    	
+    	//In admin view, each forum post will have the mid in the 
+    	function postToDB() {
+    		<%
+	        	System.out.println("postToDB");
+	        	String subject = request.getParameter("subject");
+	    	    String content = request.getParameter("content");
+	    	    if(subject != null && content != null) {
+	    	   		System.out.println("subject: " + subject);
+	    		    System.out.println("content: " + content);
+	    	    }
+    		%>
+    	}
+    </script>
 </body>
 
 </html>

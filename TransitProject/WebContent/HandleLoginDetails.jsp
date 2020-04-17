@@ -46,11 +46,7 @@
      			        response.sendRedirect("success.jsp");
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
-     			    }
-     			    
-     			    //TODO: Need to have some condition to check for administrator.
-     			    
-     			        		
+     			    }   		
      			}
      			
      			db.closeConnection(con);
