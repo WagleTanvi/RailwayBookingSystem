@@ -8,6 +8,9 @@
 </head>
 <body>
 	<%
+		/*out.println(request.getParameter("schedule"));
+		out.println(session.getAttribute("origin"));
+		out.println(session.getAttribute("destination"));*/
 		if (session.getAttribute("type").equals("register")){ %>
 			<h1>Welcome <%out.println("<span style='color:blue'>"+session.getAttribute("user")+"</span>.");%> Successfully Registered and logged in!</h1>
 			<a href='logout.jsp'>Log out</a>
