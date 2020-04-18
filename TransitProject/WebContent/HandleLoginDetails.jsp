@@ -28,7 +28,7 @@
     	    		int x = ps.executeUpdate();
     	    		if (x == 1){
     	    			session.setAttribute("user", username);
-    	    			session.setAttribute("isUser", true); //!IMPORTANT: Currently assuming that all users logging in are users only.
+    	    			session.setAttribute("role", "customer");
     	    			response.sendRedirect("success.jsp");
     	    		}
      			}
