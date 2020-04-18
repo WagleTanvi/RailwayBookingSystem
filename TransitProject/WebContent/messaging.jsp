@@ -259,6 +259,7 @@
 										"<p>" + rs.getString("content") + "</p>" +
 										"<div class='answer'>" + 
 											"" + //have to add "answer" section here. TODO: finish admin answering portion tomorrow if you can.
+										"</div>" + 
 				  				  "</div>";
 			} else {
 				postView += "<div class=\"posts\">" + 
