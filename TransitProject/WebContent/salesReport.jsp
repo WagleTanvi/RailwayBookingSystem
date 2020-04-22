@@ -47,6 +47,12 @@
 	    	<th>Test</th>
 	    	<th>Test</th>
 		</tr>
+
+	<%
+		ApplicationDB db = new ApplicationDB();	
+		Connection con = db.getConnection();
+		Statement stmt = con.createStatement();
+	%>
 	</body>
 	
 	<script>
