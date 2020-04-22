@@ -13,31 +13,35 @@
 	<body>
 		<h1>Sales Reports</h1>
 		
-		<select id="Listing">
-		  <option value = "">- Listing -</option>
-		  <option value = "TL">Transit Line</option>
-		  <option value = "DC">Destination City</option>
-		  <option value = "CUS">Customer</option>
-		  <option value = "BC">Best Customer</option>
-		  <option value = "BL">Best Line </option>
-		</select>
+		<form>
+			<select id="Listing" onchange = "">
+			  <option value = "">- Listing -</option>
+			  <option value = "TL">Transit Line</option>
+			  <option value = "DC">Destination City</option>
+			  <option value = "CUS">Customer</option>
+			  <option value = "BC">Best Customer</option>
+			  <option value = "BL">Best Line </option>
+			</select>
+			
 		&nbsp;
 		&nbsp;
-		<select id="Month">
-		  <option value = "">- Month -</option> 
-		  <option value = "Jan">Jan</option>
-		  <option value = "Feb">Feb</option>
-		  <option value = "Mar">Mar</option>
-		  <option value = "Apr">Apr</option>
-		  <option value= "May">May</option>
-		  <option value = "Jun">Jun</option>
-		  <option value = "Jul">Jul</option>
-		  <option value = "Aug">Aug</option>
-		  <option value = "Sep">Sep</option>
-		  <option value = "Oct">Oct</option>
-		  <option value = "Nov">Nov</option>
-		  <option value = "Dec">Dec</option>
-		</select>
+	
+			<select id="Month" onchange = "">
+			  <option value = "">- Month -</option> 
+			  <option value = "Jan">Jan</option>
+			  <option value = "Feb">Feb</option>
+			  <option value = "Mar">Mar</option>
+			  <option value = "Apr">Apr</option>
+			  <option value= "May">May</option>
+			  <option value = "Jun">Jun</option>
+			  <option value = "Jul">Jul</option>
+			  <option value = "Aug">Aug</option>
+			  <option value = "Sep">Sep</option>
+			  <option value = "Oct">Oct</option>
+			  <option value = "Nov">Nov</option>
+			  <option value = "Dec">Dec</option>
+			</select>
+		</form>
 	
 		<button type="Logout" onclick="window.location.href = 'logout.jsp';">Logout</button>
 		    
@@ -47,22 +51,18 @@
 	    	<th>Test</th>
 	    	<th>Test</th>
 		</tr>
+		</table>
 
-	<%
-		ApplicationDB db = new ApplicationDB();	
-		Connection con = db.getConnection();
-		Statement stmt = con.createStatement();
-	%>
 	</body>
 	
 	<script>
-     	var l = document.getElementbyID("Listing");
-		string listing = l.options[l.selectedIndex].value;
-		console.log(listing);
+	
+     	var l = document.getElementById("Listing");
+		var listing = l.options[l.selectedIndex].value;
 		
-		var m = document.getElementbyID("Month");
-		string month = m.options[m.selectedIndex].value;
-		console.log(month);
+		var m = document.getElementById("Month");
+		var month = m.options[m.selectedIndex].value;
+	
 
     </script>
 </html>
