@@ -4,7 +4,6 @@
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Messaging</title>
@@ -227,7 +226,7 @@
     
     <!-- TODO: need to work on search functionality  -->
     <form action = "messaging.jsp" method="POST">
-    	<input name="search" id="questionQuery" type="text" onkeypress="searchEvent(e)" placeholder="Search for a question here!"></input>
+    	<input name="search" id="questionQuery" type="text" onkeydown="searchEvent()" placeholder="Search for a question here!"></input>
     </form>
     
 	<%
@@ -258,21 +257,32 @@
     <%
 		}
     %>
-    <!-- admin/customer service answers -->
-    
-
-
     <div class="alert">
     	<h2>__TRANSIT LINE__ DELAYED __MINS__</h2>
     </div>
     
     <%	
 		String msgQuery = "SELECT * FROM messaging ORDER BY mid DESC";
+    	if(session.getAttribute("search") != null) {
+    		String[] keywords = ((String)session.getAttribute("search")).split(" ");
+    		msgQuery = "SELECT * FROM messaging WHERE content REGEXP '" + keywords[0].replaceAll("'", "''").replaceAll("\"", "\\\"");
+    		for(int i = 1; i < keywords.length; i++) {
+    			System.out.println("word: " + keywords[i]);
+    			msgQuery += "|" + keywords[i].replaceAll("'", "\\'").replaceAll("\"", "\\\"");
+    		}
+    		msgQuery += "'";
+    		String temp = msgQuery;
+    		
+    		msgQuery += " UNION " + temp.replace("content", "subject") + " UNION " + temp.replace("content", "answer") + " ORDER BY mid DESC";
+    		
+    		
+    	}
+    	
+    	System.out.println("msgQuery: " + msgQuery);
+    	session.setAttribute("search", null);
 		
 		ResultSet rs = stmt.executeQuery(msgQuery);
 		
-		
-		int count = 0;
 		String postView = "";
 		while(rs.next()) {
 			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
@@ -304,7 +314,6 @@
 				} 
 				postView += "</div>";
 			}
-			count++;
 		}
 		
 		if(postView.length() == 0) {
@@ -324,7 +333,6 @@
 		}
 	%>
     <script>
-    	
     	function closeBox() {
     		var answer = document.getElementById("forumAnswer");
     		var question = document.getElementById("forumPost");
@@ -335,17 +343,28 @@
     		}
     		
     	}
-    	function searchEvent(e) {
+    	
+    	function searchEvent() {
+    		<%
+    			String search = request.getParameter("search");
+    			if(search != null) {
+    				session.setAttribute("search", search);
+    				response.sendRedirect("messaging.jsp");
+    			}
+    			
+    		%>
     		
     	}
+    	
     	function questionPost() {
     		document.getElementById("forumPost").style.display = "block";
     	}
+    	
     	function answerPost() {
     		document.getElementById("forumAnswer").style.display = "block"
     	}
     	
-    	//In admin view, each forum post will have the mid in the 
+    	//In admin view, each forum post will have the mid in the subject header
     	function postToDB() {
     		<%
     			String user = (String)session.getAttribute("user");
