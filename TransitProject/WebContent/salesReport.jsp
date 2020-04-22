@@ -21,11 +21,6 @@
 		  <option value = "BC">Best Customer</option>
 		  <option value = "BL">Best Line </option>
 		</select>
-		<label class = "TL" for="TL">TL</label>
-		<label class = "DC" for="DC">DC</label>
-		<label class = "CUS" for="CUS">CUS</label>
-		<label class = "BC" for="BC">BC</label>
-		<label class = "BL" for="BL">BL</label>
 		&nbsp;
 		&nbsp;
 		<select id="Month">
@@ -43,18 +38,6 @@
 		  <option value = "Nov">Nov</option>
 		  <option value = "Dec">Dec</option>
 		</select>
-		<label class="Jan" for="Jan">January Name</label>
-        <label class="Feb" for="Feb">February Name</label>
-        <label class="March" for="March">March Name</label>
-        <label class="Apr" for="Apr">April Name</label>        
-        <label class="May" for="May">May Name</label>
-        <label class="Jun" for="Jun">June Name</label>        
-        <label class="Jul" for="Jul">July Name</label>
-        <label class="Aug" for="Aug">August Name</label>
-        <label class="Sep" for="Sep">September Name</label>
-        <label class="Oct" for="Oct">October Name</label>
-        <label class="Nov" for="Nov">November Name</label>
-        <label class="Dec" for="Dec">December Name</label>
 	
 		<button type="Logout" onclick="window.location.href = 'logout.jsp';">Logout</button>
 		    
@@ -64,8 +47,16 @@
 	    	<th>Test</th>
 	    	<th>Test</th>
 		</tr>
-		
-		  
 	</body>
-	<script src="salesReport.js"></script>
+	
+	<script>
+     	var l = document.getElementbyID("Listing");
+		string listing = l.options[l.selectedIndex].value;
+		console.log(listing);
+		
+		var m = document.getElementbyID("Month");
+		string month = m.options[m.selectedIndex].value;
+		console.log(month);
+
+    </script>
 </html>
