@@ -13,8 +13,8 @@
 	<body>
 		<h1>Sales Reports</h1>
 		
-		<form>
-			<select id="Listing" onchange = "">
+		<form action="salesReport.jsp">
+			<select name="listing" id="Listing">
 			  <option value = "">- Listing -</option>
 			  <option value = "TL">Transit Line</option>
 			  <option value = "DC">Destination City</option>
@@ -22,11 +22,9 @@
 			  <option value = "BC">Best Customer</option>
 			  <option value = "BL">Best Line </option>
 			</select>
-			
 		&nbsp;
 		&nbsp;
-	
-			<select id="Month" onchange = "">
+			<select name="month" id="Month">
 			  <option value = "">- Month -</option> 
 			  <option value = "Jan">Jan</option>
 			  <option value = "Feb">Feb</option>
@@ -41,6 +39,8 @@
 			  <option value = "Nov">Nov</option>
 			  <option value = "Dec">Dec</option>
 			</select>
+			
+			<button onclick="submitForm()">Submit</button>
 		</form>
 	
 		<button type="Logout" onclick="window.location.href = 'logout.jsp';">Logout</button>
@@ -57,11 +57,22 @@
 	
 	<script>
 	
-     	var l = document.getElementById("Listing");
-		var listing = l.options[l.selectedIndex].value;
+		function submitForm() {
+			<%
+				if(request.getParameter("listing") != null && request.getParameter("month") != null) {
+					System.out.println("listing: " + request.getParameter("listing"));
+					System.out.println("month: " + request.getParameter("month"));
+				}
+				
+			%>
+		}
 		
-		var m = document.getElementById("Month");
-		var month = m.options[m.selectedIndex].value;
+	
+     	//var l = document.getElementById("Listing");
+		//var listing = l.options[l.selectedIndex].value;
+		
+		//var m = document.getElementById("Month");
+		//var month = m.options[m.selectedIndex].value;
 	
 
     </script>
