@@ -47,6 +47,8 @@
             border: 1px solid black;
             height: 160px;
             margin: 10px 0px 10px 0px;
+            overflow-x: hidden;
+            overflow-y: scroll;
         }
 
         .alert {
@@ -63,15 +65,34 @@
 			cursor: pointer;
 			float: right;
         }
-
-        .posts h2 {
-            margin: 0px 0px 0px 0px;
+        
+        .question {
+        	width: 45%;
+    		margin: 1% 0px 0.5% 0px;
+    		float: left;
+        }
+        
+        .answer {
+        	float: left;
+		    width: 45%;
+		    margin-top: -2.85%;
+		    margin-left: 5%;
+        }
+        
+        .answer p {
+        	width: 84% !important;
+        }
+        
+        .answer h2 {
+        	margin-top: 5% !important;
         }
 
+        .posts h2 {
+            margin: -4% 0% 0% -2%;
+        }
+        
         .posts p {
-            float: left;
-            width: 45%;
-            margin: 0.5% 0px 0.5% 0px;
+        	margin: 2% 0% 0% -2%;
         }
 
         #forumPost {
@@ -185,7 +206,7 @@
 			if(session.getAttribute("badPost").equals("Yes")) {
 				%>
 					<script>
-						alert("Error. Please fill in both subject and content!");
+						alert("Error. Please fill in all sections of post!");
 					</script>
 				<%
 				//resetting badPost
@@ -250,22 +271,38 @@
 		
 		ResultSet rs = stmt.executeQuery(msgQuery);
 		
+		
 		int count = 0;
 		String postView = "";
 		while(rs.next()) {
 			if(session.getAttribute("role").equals("administrator") || session.getAttribute("role").equals("customer_service_rep")) {
 				postView += "<div class=\"posts\">" + 
-										"<h2>" + rs.getString("subject") + " - " + "<span>" + rs.getString("user") + "</span>" + "&emsp;ticketID: <span>" + rs.getInt("mid") + "</h2>" + 
-										"<p>" + rs.getString("content") + "</p>" +
-										"<div class='answer'>" + 
-											"" + //have to add "answer" section here. TODO: finish admin answering portion tomorrow if you can.
-										"</div>" + 
-				  				  "</div>";
+										"<div class=\"question\"><h2>" + rs.getString("subject") + " - " + "<span>" + rs.getString("user") + "</span>" + "&emsp;ticketID: <span>" + rs.getInt("mid") + "</h2>" + 
+										"<p>" + rs.getString("content") + "</p></div>";
+				if(rs.getString("answer") != null) {
+					postView += "<div class='answer'><h2>Response from Representative: <span>" + rs.getString("admin") + "</span></h2>" + 
+							"<p><span>" + rs.getString("answer") + "</p>" +
+					"</div>";
+				} else {
+					postView += "<div class='answer'>" + 
+							"<h2 style=\"color: #57B8FF\">OPEN TICKET</h2>" +
+					"</div>";
+				} 
+				postView += "</div>";
 			} else {
 				postView += "<div class=\"posts\">" + 
-										"<h2>" + rs.getString("subject") + " - " + "<span>" + rs.getString("user") + "</span>" + "</h2>" + 
-										"<p>" + rs.getString("content") + "</p>" +
-								  "</div>";
+										"<div class=\"question\"><h2>" + rs.getString("subject") + " - " + "<span>" + rs.getString("user") + "</span>" + "</h2>" + 
+										"<p>" + rs.getString("content") + "</p></div>";
+				if(rs.getString("answer") != null) {
+					postView += "<div class='answer'><h2>Response from Representative: <span>" + rs.getString("admin") + "</span></h2>" + 
+							"<p><span>" + rs.getString("answer") + "</p>" +
+					"</div>";
+				} else {
+					postView += "<div class='answer'>" + 
+							"<h2 style=\"color: #57B8FF\">No response yet</h2>" +
+					"</div>";
+				} 
+				postView += "</div>";
 			}
 			count++;
 		}
@@ -275,15 +312,16 @@
 		} else {
 			out.println(postView);
 		}
-		
 		if(session.getAttribute("role").equals("customer")) {
+			System.out.println(session.getAttribute("role").equals("customer"));
 			%> 
 				<button id="askQuestion" onClick="questionPost()">Ask a question</button>
 			<%
-		} else 
+		} else {
 			%>
 				<button id="askQuestion" onClick='answerPost()'>Troubleshoot/Solve</button>
 			<%
+		}
 	%>
     <script>
     	
@@ -314,6 +352,7 @@
 	        	String subject = request.getParameter("subject");
 	    	    String content = request.getParameter("content");
 	    	    if(subject != null && content != null) {
+	    	    	content = content.replaceAll("\n", "<br>");
 	    	   		System.out.println("subject: " + subject);
 	    		    System.out.println("content: " + content);
 	    		    String query = "INSERT INTO messaging (user, subject, content) VALUES (?, ?, ?)";
@@ -342,8 +381,33 @@
     	
     	function answerDB() {
     		<%
-	        	String ticketId = request.getParameter("tickerId");
+    			String admin = (String) session.getAttribute("user");
+	        	String ticketId = request.getParameter("ticketId");
 	    	    String answer = request.getParameter("answer");
+	    	    if(ticketId != null && answer != null) {
+	    	    	answer = answer.replaceAll("\n", "<br>");
+	    	    	System.out.println("ticketID: " + ticketId);
+		    	    System.out.println("answer: " + answer);
+		    	    String query = "UPDATE messaging SET admin = ?, answer = ? WHERE mid = ?";
+		    	    System.out.println("query: " + query);
+		    	    if(ticketId.length() == 0 || answer.length() == 0) {
+	    		    	System.out.println("bad post");
+	    		    	session.setAttribute("badPost", "Yes");
+	    		    	response.sendRedirect("messaging.jsp");
+	    		    } else {
+	    		    	System.out.println("good post");
+	    		    	session.setAttribute("badPost", "No");
+	    		    	PreparedStatement ps = con.prepareStatement(query);
+	    		    	ps.setString(1, admin);
+	    		    	ps.setString(2, answer);
+	    		    	ps.setString(3, ticketId);
+	    		    	
+	    		    	if (ps.executeUpdate() != 1) {
+		    		    	System.out.println("some error. Probably never going to happen but keeping it here just in case.");
+		    		    }
+		    		    response.sendRedirect("messaging.jsp");
+	    		    }
+	    	    }
     		%>
     	}
     </script>
