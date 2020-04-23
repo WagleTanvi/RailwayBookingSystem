@@ -140,6 +140,13 @@
             margin-left: 40%;
             width: 20%;
         }
+        
+        #resetSearch {
+        	background-color: #588B8B;
+        	position: absolute;
+			right: 4%;			    
+			top: 9.5%;
+        }
     </style>
     <%
     	//if user did not log in yet, redirect to index.jsp
@@ -222,7 +229,13 @@
 </head>
 
 <body>
+	<a style="color: black; text-decoration: none; font-size: 20px;"href=""><button style="background-color: green; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>
+	<a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp"><button style="background-color: red; position:absolute; top:2%; right: 4%; border-radius: 10px;">Logout</button></a>
     <h3>Messaging</h3>
+    
+    <form action="messaging.jsp" method="POST">
+    	<button id="resetSearch" onClick="resetSearch()">Reset Search</button>
+    </form>
     
     <!-- TODO: need to work on search functionality  -->
     <form action = "messaging.jsp" method="POST">
@@ -353,7 +366,6 @@
     			}
     			
     		%>
-    		
     	}
     	
     	function questionPost() {
@@ -375,7 +387,6 @@
 	    	   		System.out.println("subject: " + subject);
 	    		    System.out.println("content: " + content);
 	    		    String query = "INSERT INTO messaging (user, subject, content) VALUES (?, ?, ?)";
-	    		    
 	    		    System.out.println("query: " + query);
 	    		    if(subject.length() == 0 || content.length() == 0) {
 	    		    	System.out.println("bad post");
