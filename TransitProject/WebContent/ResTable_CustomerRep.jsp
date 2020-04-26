@@ -88,7 +88,7 @@
 			
 			//to hold all the information from the database 
 			ArrayList<ResObj> customerTable = new ArrayList<ResObj>(); 
-			ResObj entry = new ResObj("1", "", 1, "", "", "", "", 1, 2); 
+			//ResObj entry = new ResObj("1", "", 1, "", "", "", "", 1, 2); 
 			
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);

@@ -11,6 +11,7 @@
 <title>Insert title here</title>
 </head>
 <body>
+<% out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
 
 <table id = "resvationTable" align = "center" style="width:90%">
   
@@ -41,7 +42,7 @@
 			
 			//to hold all the information from the database 
 			ArrayList<ResObj> customerTable = new ArrayList<ResObj>(); 
-			ResObj entry = new ResObj("1", "", 1, "", "", "", "", 1, 2); 
+			//ResObj entry = new ResObj("1", "", 1, "", "", "", "", 1, 2); 
 			
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);

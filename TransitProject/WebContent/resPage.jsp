@@ -28,7 +28,7 @@
 	
 	<%
 	
-	if(request != null){
+	if(request.getParameter("username") != null){
 		String name = request.getParameter("username");
 		String sch = session.getAttribute("schedule").toString();
 		String date = session.getAttribute("date").toString();
@@ -90,7 +90,7 @@
 		
 	}
 	
-	String role = "admin"; 
+	String role = (String)session.getAttribute("role"); 
 	
 	if(session.getAttribute("user") == null) {
 		response.sendRedirect("index.jsp");
@@ -101,17 +101,17 @@
 				<jsp:include page="HandleResTable_Customer.jsp"/>
 				
 				<%
-	} else if ((role.equals("admin"))) {
+	} else if ((role.equals("administrator"))) {
 		%>
 		
 		<div style="align:center; text-align:center; " >
 		<jsp:include page="ResTable_Admin.jsp"/>
 		<%
-	} else if ((role.equals("customerRep"))) {
+	} else if ((role.equals("customer_service_rep"))) {
 		%>
 		
 		<div style="align:center; text-align:center; " >
-		<jsp:include page="ResTable_CustomerRep.jsp"/>
+		<jsp:include page="ResTable_CustomerRep.jsp"/></div></div>
 		<%
 	}
 	
@@ -121,7 +121,7 @@
 
 	<div style = "text-align: center; padding-top:30px;">
 		<button>
-			<a style="color: black; font-size: 20px;"href="index.jsp">Make Another Reservation</a>
+			<a style="color: black; font-size: 20px;"href="TrainSchedule.jsp">Make Another Reservation</a>
 		</button>
 	</div>
 
