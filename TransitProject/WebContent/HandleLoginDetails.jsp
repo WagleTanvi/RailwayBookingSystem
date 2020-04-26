@@ -34,15 +34,38 @@
      			}
      			else if (session.getAttribute("type").equals("login")){
      				
-     				//should only be getting one user after this query
+     				//should only be getting one user after this query - bnd28
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
 
-     			    if (rs.next()) {
-     			        session.setAttribute("user", username); // the username will be stored in the session
-     			        if(username.equals("admin")){
-     			        	session.setAttribute("role", "admin");
-     			        	response.sendRedirect("Home.jsp");
+     				if (rs.next()) {
+     					System.out.println("Username: " + rs.getString("username"));
+     					System.out.println("User's Role: " + rs.getString("role"));
+     					
+     					//storing information into session
+     			        session.setAttribute("user", rs.getString("username"));
+     			        session.setAttribute("role", rs.getString("role"));
+     			        
+     			        //needed for messaging.jsp delayed/early arrival functionality - bnd28
+     			        ArrayList<String> transitLines = new ArrayList<String>();
+     			        ArrayList<Integer> scheduleNums = new ArrayList<Integer>();
+     			        ArrayList<String> startTimes = new ArrayList<String>();
+     			        //arrivalTimeAfter compare in parallel
+     			        ResultSet res = stmt.executeQuery("SELECT t.schedule_num, t.arrival_time, tl.tl_name FROM `train_schedule_timings` t, `reservations` r, `transit_line` tl, `train_schedule_assignment` tsa WHERE tsa.schedule_num = t.schedule_num AND tsa.tl_id = tl.tl_id AND t.schedule_num = r.schedule_num AND r.username='" + session.getAttribute("user") + "' ORDER BY t.arrival_time");
+     			        while(res.next()) {
+     			        	System.out.println("transitLine: " + res.getString("tl.tl_name"));
+     			        	transitLines.add(res.getString("tl.tl_name"));
+     			        	
+     			        	System.out.println("scheduleNum: " + res.getInt("t.schedule_num"));
+     			        	scheduleNums.add(res.getInt("t.schedule_num"));
+     			        	
+     			        	System.out.println("startTimes: " + res.getString("t.arrival_time"));
+     			        	startTimes.add(res.getString("t.arrival_time"));
      			        }
+     			      	
+     			        session.setAttribute("transitLinesInit", transitLines);
+     			        session.setAttribute("scheduleNumsInit", scheduleNums);
+     			        session.setAttribute("startTimesInit", startTimes);
+     			        
      			        response.sendRedirect("Home.jsp");
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
