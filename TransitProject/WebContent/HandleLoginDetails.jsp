@@ -28,23 +28,21 @@
     	    		int x = ps.executeUpdate();
     	    		if (x == 1){
     	    			session.setAttribute("user", username);
-    	    			session.setAttribute("isUser", true); //!IMPORTANT: Currently assuming that all users logging in are users only.
-    	    			response.sendRedirect("success.jsp");
+    	    			response.sendRedirect("editPerson.jsp");
     	    		}
      			}
      			else if (session.getAttribute("type").equals("login")){
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
      			    if (rs.next()) {
      			        session.setAttribute("user", username); // the username will be stored in the session
-     			        session.setAttribute("isUser", true); //!IMPORTANT: Currently assuming that all users logging in are users only.
-     			        response.sendRedirect("success.jsp");
+     			        if(username.equals("admin")){
+     			        	session.setAttribute("role", "admin");
+     			        	response.sendRedirect("Home.jsp");
+     			        }
+     			        response.sendRedirect("Home.jsp");
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
      			    }
-     			    
-     			    //TODO: Need to have some condition to check for administrator.
-     			    
-     			        		
      			}
      			
      			db.closeConnection(con);
