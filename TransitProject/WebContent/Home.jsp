@@ -23,7 +23,7 @@ String saleLink = "salesReports.jsp";
 String userLink = "People.jsp";
 %>
 
-<% if(session.getAttribute("role").equals("customer representative")){ %>
+<% if(session.getAttribute("role").equals("customer_service_rep")){ %>
 <input type = "button" value = "Browse All Train Schedules" onClick = "javascript:window.location='<%=browseLink %>';">
 <input type = "button" value = "Reserve/View Train Schedules" onClick = "javascript:window.location='<%=scheduleLink %>';">
 <input type = "button" value = "Manage Train Schedule" onClick = "javascript:window.location='<%=manageLink %>';">
@@ -35,7 +35,7 @@ else if(session.getAttribute("role").equals("customer")){ %>
 <input type = "button" value = "Reserve/View Train Schedules" onClick = "javascript:window.location='<%=scheduleLink %>';">
 <input type = "button" value = "View Reservations" onClick = "javascript:window.location='<%=resLink %>';">
 <% } 
-else if(session.getAttribute("role").equals("admin")){ %>
+else if(session.getAttribute("role").equals("administrator")){ %>
 <input type = "button" value = "View Users" onClick = "javascript:window.location='<%=userLink %>';">
 <input type = "button" value = "Browse All Train Schedules" onClick = "javascript:window.location='<%=browseLink %>';">
 <input type = "button" value = "Reserve/View Train Schedules" onClick = "javascript:window.location='<%=scheduleLink %>';">
