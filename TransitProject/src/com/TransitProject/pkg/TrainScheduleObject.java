@@ -1,3 +1,4 @@
+/* Written By: Tanvi Wagle tnw39 */
 package com.TransitProject.pkg;
 
 
@@ -44,13 +45,23 @@ public class TrainScheduleObject {
 				"<td style=\"border: 1px solid black;\">"+ end + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + travelTime + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + "$"+ cost + "</td>";
-		if (personType.contentEquals("customer")) {
-			html += "<td style=\"border: 1px solid black;\"><a href='?origin="+start+"&dest="+end+"&schedule="+scheduleNum+"#popup1'><button> Register </button></a>" + "</td>";
-		}	
+//		if (personType.contentEquals("customer")) {
+			html += "<td style=\"border: 1px solid black;\"><a href='?fare="+cost+"&schedule="+scheduleNum+"#popup1'><button> Register </button></a>" + "</td>";
+//		}	
 		System.out.println(html);
 		return html;
 	}
-	
+	public String getBrowseData() {
+		String html = "<td style=\"border: 1px solid black;\">"+ transitLine + "</td>"+
+				"<td style=\"border: 1px solid black;\">#" + scheduleNum + "</td>"+
+				"<td style=\"border: 1px solid black;\">" + start + "</td>"+
+				"<td style=\"border: 1px solid black;\">"+ end + "</td>"+
+				"<td style=\"border: 1px solid black;\">" + departure + "</td>"+
+				"<td style=\"border: 1px solid black;\">" + arrival + "</td>"+
+				"<td style=\"border: 1px solid black;\">" + "$"+ cost + "</td>";	
+		System.out.println(html);
+		return html;
+	}
 	public String getAddData() {
 		String html = "<td style=\"border: 1px solid black;\">" + trainId + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + start + "</td>"+

@@ -1,3 +1,4 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -11,6 +12,16 @@
 </head>
 <body>
 	<%
+	if (request.getParameter("clear") != null && request.getParameter("clear").equals("true")){
+		session.removeAttribute("changeType");
+		session.removeAttribute("schedule_nums");
+		session.removeAttribute("change_line");
+		session.removeAttribute("schedule");
+		session.removeAttribute("update");
+		session.removeAttribute("update_msg");
+		response.sendRedirect("success.jsp");
+	}
+	else{
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
@@ -115,6 +126,7 @@
 			} // end of success
 			response.sendRedirect("updateTrainSchedule.jsp");   
 		} // end of else
+	}
 	%>
 </body>
 </html>

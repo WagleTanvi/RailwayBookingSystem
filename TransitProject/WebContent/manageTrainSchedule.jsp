@@ -1,10 +1,11 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Manage Train Schedule</title>
 </head>
 <style>
 	.button {
@@ -21,7 +22,7 @@
 	}
 </style>
 <body>
-	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="">Home</a></button>
+	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="success.jsp">Home</a></button>
 	<button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 	<h2 style="text-align:center"> Manage Train Schedule</h2>
 	<div style="display: flex; justify-content:center;" >

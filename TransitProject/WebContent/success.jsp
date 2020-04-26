@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="java.util.Enumeration"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +11,11 @@
 		/*out.println(request.getParameter("schedule"));
 		out.println(session.getAttribute("origin"));
 		out.println(session.getAttribute("destination"));*/
-		if (session.getAttribute("type").equals("register")){ %>
-			<h1>Welcome <%out.println("<span style='color:blue'>"+session.getAttribute("user")+"</span>.");%> Successfully Registered and logged in!</h1>
-			<a href='logout.jsp'>Log out</a>
-		<% }
-		else if (session.getAttribute("type").equals("login")){ %>
-			<h1>Welcome back <%out.println("<span style='color:blue'>"+session.getAttribute("user")+"</span>.");%> Successfully Logged In!</h1>
-			<a href='logout.jsp'>Log out</a>
-		<% }
+		Enumeration<String> attributes = request.getSession().getAttributeNames();
+		while (attributes.hasMoreElements()) {
+		    String attribute = (String) attributes.nextElement();
+		    out.println(attribute+" : "+request.getSession().getAttribute(attribute));
+		}
 	%>
 	
 </body>

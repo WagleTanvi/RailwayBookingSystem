@@ -1,3 +1,4 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -58,7 +59,8 @@
 			response.sendRedirect("HandleUpdateTrainSchedule.jsp?schedule="+request.getParameter("schedule"));
 		}
 	%>
-	
+	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="HandleUpdateTrainSchedule.jsp?clear=true">Home</a></button>
+	<button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 	<h2 style="text-align:center"> Update Train Schedule</h2>
 	<p style="text-align:center"> Selected train schedule: <%= session.getAttribute("schedule") %></p>
     <div style="display: flex; justify-content:center;" >

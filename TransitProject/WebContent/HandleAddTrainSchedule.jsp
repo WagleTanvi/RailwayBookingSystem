@@ -1,3 +1,4 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -11,6 +12,15 @@
 </head>
 <body>
 	<%
+	if (request.getParameter("clear") != null && request.getParameter("clear").equals("true")){
+		session.removeAttribute("add_train");
+		session.removeAttribute("add_dir");
+		session.removeAttribute("add_line");
+		session.removeAttribute("add");
+		session.removeAttribute("add_msg");
+		response.sendRedirect("success.jsp");
+	}
+	else{
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
@@ -83,7 +93,7 @@
 			    }
 			 } 
 			if (success == true){
-				ResultSet rs = stmt.executeQuery("Select max(schedule_num) +1000 num from train_schedule_assignment;");
+				ResultSet rs = stmt.executeQuery("Select max(schedule_num)+1 num from train_schedule_assignment;");
 				rs.next();
 				int schedule_num = rs.getInt("num");
 				String line = ((String) session.getAttribute("add_line")).replace("+", " ");
@@ -136,6 +146,7 @@
 			} // end of success
 			response.sendRedirect("addTrainSchedule.jsp"); 
 		} // end of else
+	}
 	%>
 </body>
 </html>

@@ -1,3 +1,4 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -63,6 +64,8 @@
 			lines.add(rs.getString("tl_name"));
 		}
 	%>
+	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="HandleChangeTrainSchedule.jsp?clear=true">Home</a></button>
+	<button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 	<h2 style="text-align:center"> Modify Train Schedule</h2>
 	<div style="display: flex; justify-content:center;" >
 	<form method="get" action="HandleChangeTrainSchedule.jsp">
@@ -113,7 +116,7 @@
 	<% if (session.getAttribute("change_msg") != null) {  %>
 		<% if (session.getAttribute("change_msg").equals("Successfully Deleted!")) {
 			 session.removeAttribute("schedule_nums");
-			 session.removeAttribute("change_type");
+			 session.removeAttribute("changeType");
 			 session.removeAttribute("change_line");
 		%>
 		<div id="popup1" class="overlay">

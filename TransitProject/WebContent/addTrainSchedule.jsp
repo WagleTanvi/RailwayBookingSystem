@@ -1,3 +1,4 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -7,7 +8,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Add Train Schedule</title>
 </head>
 <style>
 
@@ -68,7 +69,7 @@
 	}
 	
 	%>
-	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="">Home</a></button>
+	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="HandleAddTrainSchedule.jsp?clear=true">Home</a></button>
 	<button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 	<h2 style="text-align:center"> Add Train Schedule</h2>
 	<div style="display: flex; justify-content:center;" >

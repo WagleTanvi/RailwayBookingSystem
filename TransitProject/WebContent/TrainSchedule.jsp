@@ -1,3 +1,4 @@
+<!-- Written By: Tanvi Wagle tnw39 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -69,6 +70,11 @@ a {
 		while (rs.next()){
 			stations.add(rs.getString("name"));
 		}
+		rs = stmt.executeQuery("Select username from users where role='customer';");
+		ArrayList<String> users = new ArrayList<String> ();
+		while (rs.next()){
+			users.add(rs.getString("username"));
+		}
 		/* if (session.getAttribute("data") != null){
 			for (TrainScheduleObject t: (ArrayList<TrainScheduleObject>)session.getAttribute("data")){
 				out.println(t);
@@ -84,7 +90,7 @@ a {
 		
 
 	%>
-	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="">Home</a></button>
+	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="HandleTrainSchedule.jsp?clear=true">Home</a></button>
 	<button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 	<h1 style="text-align:center"> Train Schedule </h1>
 	<div style="display: flex; justify-content:center;" >
@@ -135,17 +141,6 @@ a {
 	        <% }} %>
        </select> 
 		</td>
-		<!-- <td>
-			<select name="sort" id ="sort"> 
-			<option  disabled selected>Sort By</option>
-	        <option value="date">Date</option>
-	        <option value="fare">Fare</option>
-	        <option value="arrival time">Arrival Time</option>
-	        <option value="destination time">Destination Time</option>
-	        <option value="origin station"> Origin Station </option>
-	        <option value="destination station">Destination Station</option>
-        </select> 
-		</td> -->
 		<td>
 			<input type="submit" value="Filter" />
 		</td>
@@ -155,6 +150,18 @@ a {
 	</form>
 	</div>
 	<div style="display: flex; justify-content:center;" >
+	<table>
+		<td><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></td>
+		<% if (!personType.equals("customer")){ %> 
+		<td> <button> <a href="manageTrainSchedule.jsp">Manage Train Schedule </a></button></td>
+		<%} %>
+	</table>
+	</div>
+	<div style="display: flex; justify-content:center;" >
+	<% if (session.getAttribute("t_error") != null){ 
+		out.println(session.getAttribute("t_error"));
+		session.removeAttribute("t_error");
+	  } else { %>
 	<table style="border: 1px solid black; border-collapse: collapse;" >
 		<% if (session.getAttribute("data") != null){ %>
 		<tr> 
@@ -165,7 +172,7 @@ a {
 			<th style="border: 1px solid black;"> End Station </th>
 			<th style="border: 1px solid black;"> Travel Time </th>
 			<th style="border: 1px solid black;"> Cost </th> 
-			 <% if (personType.equals("customer")){ %> <th style="border: 1px solid black;">		</th>  <%} %>
+			 <th style="border: 1px solid black;">		</th> 
 		</tr>
 			<% for (TrainScheduleObject t: (ArrayList<TrainScheduleObject>)session.getAttribute("data")){
 				%>
@@ -176,24 +183,33 @@ a {
 			}
 		} %>
 	</table>
-	<table style="position:absolute; bottom:100px;">
-		<td><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></td>
-		<% if (!personType.equals("customer")){ %> 
-		<td> <button> <a href="manageTrainSchedule.jsp">Manage Train Schedule </a></button></td>
-		<%} %>
-	</table>
-	
+	<%} %>
 	</div>
 	<div id="popup1" class="overlay">
 		<div class="popup">
+			<% 
+				session.setAttribute("r_fare", request.getParameter("fare"));
+				session.setAttribute("schedule", request.getParameter("schedule"));
+				session.removeAttribute("data");
+				session.removeAttribute("direction");
+			%> 
 			<h2>Select More Ticket Information</h2>
+			<p><b>Date:</b> <%= session.getAttribute("date") %></p>
 			<p><b>Train Number:</b> <%= request.getParameter("schedule") %></p>
-			<p><b>Origin:</b> <%= request.getParameter("origin") %></p>
-			<p><b> Destination: </b> <%= request.getParameter("dest") %></p>
+			<p><b>Origin:</b> <%= session.getAttribute("origin") %></p>
+			<p><b> Destination: </b> <%= session.getAttribute("destination") %></p>
 			<div class="content">
-				<form action="success.jsp?schedule=">
-				  <p>Please select ticket type:</p>
-				  <input type="radio" id="one" name="trip" value="one">
+				<form action="HandleSchedule.jsp">
+				 <%if (!personType.equals("customer")){ %>
+				  <select name="username" id ="username"> 
+				  		<option  disabled selected>Select User</option>
+				        <%  for (String s : users){ %>
+				            <option value=<%= s%>><%= s %></option>
+				         <%} %>
+			       </select> 
+			       <% } %>
+				  <p><b>Please select ticket type:</b></p>
+				  <input type="radio" id="one" name="trip" value="one" checked>
 				  <label for="one">One-Way</label>
 				  <input type="radio" id="two" name="trip" value="two">
 				  <label for="two">Round-Trip</label><br>
@@ -202,14 +218,22 @@ a {
 				  <input type="radio" id="monthly" name="trip" value="monthly">
 				  <label for="monthly">Monthly</label><br>
 				  
-				  <p>Please select discount type:</p>
-				  <input type="radio" id="normal" name="discount" value="normal">
-				  <label for="discount">Normal</label><br>
-				  <input type="radio" id="senior" name="discount" value="senior">
-				  <label for="senior">Senior</label><br>  
-				  <input type="radio" id="child/disabled" name="discount" value="child/disabled">
-				  <label for="child/disabled">Child/Disabled</label><br><br>
-				  <input type="submit" value="Submit">
+				  <p><b>Please select discount type:</b></p>
+				  <input type="radio" id="normal" name="discount" value="normal" checked>
+				  <label for="discount">Normal</label>
+				  <input type="radio" id="senior/child" name="discount" value="senior/child">
+				  <label for="senior">Senior</label> 
+				  <input type="radio" id="disabled" name="discount" value="disabled">
+				  <label for="child/disabled">Child/Disabled</label><br>
+				  
+				   <p><b>Please select class:</b></p>
+				  <input type="radio" id="Business" name="class" value="Business" checked>
+				  <label for="business">Business</label>
+				  <input type="radio" id="First" name="class" value="First">
+				  <label for="First">First</label>
+				  <input type="radio" id="Economy" name="class" value="Economy">
+				  <label for="Economy">Economy</label><br><br>
+			       <input type="submit" value="Submit">
 				  <button><a href="#">Close</a></button>
 				</form>
 			</div>
