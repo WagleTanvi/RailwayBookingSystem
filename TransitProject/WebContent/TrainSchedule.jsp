@@ -58,7 +58,7 @@ a {
 </style>
 <body>
 	<%
-	 	String personType = "customer rep";
+	 	String personType = session.getAttribute("role");
 		
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
