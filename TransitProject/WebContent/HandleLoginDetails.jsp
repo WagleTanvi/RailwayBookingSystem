@@ -29,10 +29,14 @@
     	    		if (x == 1){
     	    			session.setAttribute("user", username);
     	    			response.sendRedirect("editPerson.jsp");
+
     	    		}
      			}
      			else if (session.getAttribute("type").equals("login")){
+     				
+     				//should only be getting one user after this query
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
+
      			    if (rs.next()) {
      			        session.setAttribute("user", username); // the username will be stored in the session
      			        if(username.equals("admin")){
@@ -43,6 +47,7 @@
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
      			    }
+
      			}
      			
      			db.closeConnection(con);
