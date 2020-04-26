@@ -17,7 +17,7 @@
 		session.removeAttribute("schedule_nums");
 		session.removeAttribute("change_line");
 		session.removeAttribute("change_msg");
-		response.sendRedirect("home.jsp");
+		response.sendRedirect("Home.jsp");
 	}
 	else{
 		ApplicationDB db = new ApplicationDB();	

@@ -16,7 +16,7 @@
 		session.removeAttribute("b_data");
 		session.removeAttribute("b_sort");
 		session.removeAttribute("b_line");
-		response.sendRedirect("home.jsp");
+		response.sendRedirect("Home.jsp");
 	}
 	else{
 	ApplicationDB db = new ApplicationDB();	

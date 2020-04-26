@@ -18,7 +18,7 @@
 		session.removeAttribute("add_line");
 		session.removeAttribute("add");
 		session.removeAttribute("add_msg");
-		response.sendRedirect("home.jsp");
+		response.sendRedirect("Home.jsp");
 	}
 	else{
 		ApplicationDB db = new ApplicationDB();	

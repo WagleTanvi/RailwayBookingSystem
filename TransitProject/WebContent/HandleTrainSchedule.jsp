@@ -27,7 +27,7 @@
 		session.removeAttribute("direction");
 		session.removeAttribute("date");
 		session.removeAttribute("t_error");
-		response.sendRedirect("home.jsp");
+		response.sendRedirect("Home.jsp");
 	}
 	else if (request.getParameter("trip") != null){
 		session.removeAttribute("data");

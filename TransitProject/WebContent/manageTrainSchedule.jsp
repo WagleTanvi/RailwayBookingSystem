@@ -33,7 +33,7 @@ pageEncoding="UTF-8"%>
     >
       <a
         style="color: black; text-decoration: none; font-size: 20px;"
-        href="home.jsp"
+        href="Home.jsp"
         >Home</a
       >
     </button>
