@@ -17,7 +17,7 @@ session.setAttribute("filterRole", "all");
 String browseLink = "BrowseTrainSchedule.jsp";
 String scheduleLink = "TrainSchedule.jsp";
 String manageLink = "manageTrainSchedule.jsp";
-String resLink = "Reservations.jsp";
+String resLink = "resPage.jsp";
 String mesLink = "messaging.jsp";
 String saleLink = "salesReports.jsp";
 String userLink = "People.jsp";
