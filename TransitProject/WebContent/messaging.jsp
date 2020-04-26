@@ -145,7 +145,7 @@
         	background-color: #588B8B;
         	position: absolute;
 			right: 4%;			    
-			top: 9.5%;
+			top: 7.5%;
         }
     </style>
     <%
