@@ -11,7 +11,9 @@
 <body>
 	 <%
      	String type = request.getParameter("command");
+	 	session.setAttribute("role", "null");
      	session.setAttribute("type", type);
+     	session.setAttribute("filterRole", "all");
      	if (type.equals("register")){
      		out.println("<h1> Register Page: </h1>");
      	}
