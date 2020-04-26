@@ -52,7 +52,7 @@
 
         .alert {
             border: 1px solid black;
-            height: 100px;
+            /* height: 100px; */
             margin: 10px 0px 10px 0px;
             background-color: #F03A47;
         }
@@ -149,8 +149,16 @@
         }
     </style>
     <%
+    	ApplicationDB db = new ApplicationDB();	
+		Connection con = db.getConnection();
+		Statement stmt = con.createStatement();
+		
+		
+    	
+
+    	
     	//if user did not log in yet, redirect to index.jsp
-    	if(session.getAttribute("role") == null) {
+    	if(session.getAttribute("role") == null || session.getAttribute("user") == null) {
     		response.sendRedirect("index.jsp");
     	} else if (!(session.getAttribute("role").equals("customer"))) {
     		%>
@@ -221,9 +229,6 @@
 		}
     	
 		System.out.println("Role of current viewer: " + session.getAttribute("role"));
-		ApplicationDB db = new ApplicationDB();	
-		Connection con = db.getConnection();
-		Statement stmt = con.createStatement();
     
     %>
 </head>
@@ -270,9 +275,69 @@
     <%
 		}
     %>
-    <div class="alert">
+    
+    <%
+	    ArrayList<String> transitLines = new ArrayList<String>();
+		ArrayList<Integer> scheduleNums = new ArrayList<Integer>();
+		ArrayList<String> startTimes = new ArrayList<String>();
+		
+		ResultSet res = stmt.executeQuery("SELECT t.schedule_num, t.arrival_time, tl.tl_name FROM `train_schedule_timings` t, `reservations` r, `transit_line` tl, `train_schedule_assignment` tsa WHERE tsa.schedule_num = t.schedule_num AND tsa.tl_id = tl.tl_id AND t.schedule_num = r.schedule_num AND r.username='" + session.getAttribute("user") + "' ORDER BY t.arrival_time");
+	 	while(res.next()) {
+	 		System.out.println("transitLine: " + res.getString("tl.tl_name"));
+	 		transitLines.add(res.getString("tl.tl_name"));
+	 	
+	 		System.out.println("scheduleNum: " + res.getInt("t.schedule_num"));
+	 		scheduleNums.add(res.getInt("t.schedule_num"));
+	 	
+	 		System.out.println("startTimes: " + res.getString("t.arrival_time"));
+	 		startTimes.add(res.getString("t.arrival_time"));
+		}
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
+		
+		
+		if(transitLinesInit.size() > 0) {
+			out.println("<div class='alert'>");
+			@SuppressWarnings("unchecked")
+			ArrayList<Integer> scheduleNumsInit = (ArrayList<Integer>)session.getAttribute("scheduleNumsInit");
+			@SuppressWarnings("unchecked")
+			ArrayList<String> startTimesInit = (ArrayList<String>)session.getAttribute("startTimesInit");
+			
+			int flag = 0;
+			for(int i = 0; i < startTimes.size(); i++) {
+				String[] currTime = startTimes.get(i).split(":");
+				int currS = (Integer.parseInt(currTime[0]) * 60 * 60) + (Integer.parseInt(currTime[1])) * 60 + Integer.parseInt(currTime[2]);
+				
+				String[] initTime = startTimesInit.get(i).split(":");
+				int initS = (Integer.parseInt(initTime[0]) * 60 * 60) + (Integer.parseInt(initTime[1])) * 60 + Integer.parseInt(initTime[2]);
+				
+				if(initS > currS) {
+					flag = 1;
+					System.out.println("early");
+					out.println("<h2>Today's train on " + transitLinesInit.get(i) + " at " + startTimesInit.get(i) + " will now be arriving " + (Math.abs(currS - initS)) / 60 + " minutes early at " + startTimes.get(i) + "</h2>");
+				} else if (initS < currS) {
+					flag = 1;
+					System.out.println("delayed");
+					out.println("<h2>Today's train on " + transitLinesInit.get(i) + " at " + startTimesInit.get(i) + " will now be arriving " + (Math.abs(currS - initS)) / 60 + " minutes late at " + startTimes.get(i) + "</h2>");
+				} else {
+					System.out.println("on time");
+				}
+			}
+			if(flag == 0) {
+				out.println("<h2>All reservations will be arriving on time!</h2>");
+			}
+			out.println("</div>");
+		} else {
+			out.println("<div class='alert'>");
+			out.println("<h2>Purchase tickets to view early arrivals or delays.</h2>");
+			out.println("</div>");
+		}
+		
+    %>
+<!--     <div class="alert">
     	<h2>__TRANSIT LINE__ DELAYED __MINS__</h2>
-    </div>
+    </div> -->
     
     <%	
 		String msgQuery = "SELECT * FROM messaging ORDER BY mid DESC";
@@ -335,7 +400,6 @@
 			out.println(postView);
 		}
 		if(session.getAttribute("role").equals("customer")) {
-			System.out.println(session.getAttribute("role").equals("customer"));
 			%> 
 				<button id="askQuestion" onClick="questionPost()">Ask a question</button>
 			<%
