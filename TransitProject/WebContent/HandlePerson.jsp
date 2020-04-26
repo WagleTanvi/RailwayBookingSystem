@@ -56,7 +56,7 @@
     	    			response.sendRedirect("Home.jsp");
 
     	    		}
-    	    			response.sendRedirect("success.jsp");
+    	    			response.sendRedirect("Home.jsp");
     	    		}
     	    		
     	    	db.closeConnection(con);

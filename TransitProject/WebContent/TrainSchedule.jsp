@@ -58,7 +58,7 @@ a {
 </style>
 <body>
 	<%
-	 	String personType = session.getAttribute("role");
+	 	String personType = (String)session.getAttribute("role");
 		
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
@@ -151,7 +151,7 @@ a {
 	</div>
 	<div style="display: flex; justify-content:center;" >
 	<table>
-		<td><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></td>
+		<td><a href="resPage.jsp"><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></a></td>
 		<% if (!personType.equals("customer")){ %> 
 		<td> <button> <a href="manageTrainSchedule.jsp">Manage Train Schedule </a></button></td>
 		<%} %>

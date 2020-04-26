@@ -12,7 +12,7 @@
 </head>
 <body>
 <%
-	 	String personType = session.getAttribute("role");
+	 	String personType = (String)session.getAttribute("role");
 		
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
