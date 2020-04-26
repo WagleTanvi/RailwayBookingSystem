@@ -29,6 +29,15 @@
 		session.removeAttribute("t_error");
 		response.sendRedirect("success.jsp");
 	}
+	else if (request.getParameter("trip") != null){
+		session.removeAttribute("data");
+		session.removeAttribute("direction");
+		session.setAttribute("discount", request.getParameter("discount"));
+		session.setAttribute("trip", request.getParameter("trip"));
+		session.setAttribute("class", request.getParameter("class"));
+		session.setAttribute("username", request.getParameter("username"));
+		response.sendRedirect("success.jsp");
+	}
 	else{
 		String date = request.getParameter("date");
 		String origin = request.getParameter("origin").replace("+", " ");

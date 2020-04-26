@@ -38,7 +38,7 @@ public class TrainScheduleObject {
 	}
 	public String getData(String personType) {
 		String html = "<td style=\"border: 1px solid black;\">" 
-				+"<a href='stations.jsp?transit="+transitLine+"'>"+ transitLine + "</a></td>"+
+				+"<a href='stations.jsp?transit="+transitLine+"&num="+scheduleNum+"'>"+ transitLine + "</a></td>"+
 				"<td style=\"border: 1px solid black;\">" + departure + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + arrival + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + start + "</td>"+

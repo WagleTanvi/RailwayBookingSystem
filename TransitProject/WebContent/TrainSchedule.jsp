@@ -87,7 +87,7 @@ a {
 		while (rs.next()){
 			dates.add(rs.getDate("date").toString());
 		} */
-		
+		System.out.println(session.getAttribute("data"));
 
 	%>
 	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="HandleTrainSchedule.jsp?clear=true">Home</a></button>
@@ -185,13 +185,12 @@ a {
 	</table>
 	<%} %>
 	</div>
+	<% if (request.getParameter("fare") != null){ %>
 	<div id="popup1" class="overlay">
 		<div class="popup">
 			<% 
 				session.setAttribute("r_fare", request.getParameter("fare"));
 				session.setAttribute("schedule", request.getParameter("schedule"));
-				session.removeAttribute("data");
-				session.removeAttribute("direction");
 			%> 
 			<h2>Select More Ticket Information</h2>
 			<p><b>Date:</b> <%= session.getAttribute("date") %></p>
@@ -199,7 +198,7 @@ a {
 			<p><b>Origin:</b> <%= session.getAttribute("origin") %></p>
 			<p><b> Destination: </b> <%= session.getAttribute("destination") %></p>
 			<div class="content">
-				<form action="HandleSchedule.jsp">
+				<form action="HandleTrainSchedule.jsp">
 				 <%if (!personType.equals("customer")){ %>
 				  <select name="username" id ="username"> 
 				  		<option  disabled selected>Select User</option>
@@ -239,5 +238,6 @@ a {
 			</div>
 		</div>
 	</div>
+	<% } %>
 </body>
 </html>
