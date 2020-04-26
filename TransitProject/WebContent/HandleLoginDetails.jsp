@@ -28,25 +28,26 @@
     	    		int x = ps.executeUpdate();
     	    		if (x == 1){
     	    			session.setAttribute("user", username);
-    	    			session.setAttribute("role", "customer");
-    	    			response.sendRedirect("success.jsp");
+    	    			response.sendRedirect("editPerson.jsp");
+
     	    		}
      			}
      			else if (session.getAttribute("type").equals("login")){
      				
      				//should only be getting one user after this query
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
-     				if (rs.next()) {
-     					System.out.println("Username: " + rs.getString("username"));
-     					System.out.println("User's Role: " + rs.getString("role"));
-     					
-     					//storing information into session
-     			        session.setAttribute("user", rs.getString("username"));
-     			        session.setAttribute("role", rs.getString("role"));
-     			        response.sendRedirect("success.jsp");
+
+     			    if (rs.next()) {
+     			        session.setAttribute("user", username); // the username will be stored in the session
+     			        if(username.equals("admin")){
+     			        	session.setAttribute("role", "admin");
+     			        	response.sendRedirect("Home.jsp");
+     			        }
+     			        response.sendRedirect("Home.jsp");
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
-     			    }   		
+     			    }
+
      			}
      			
      			db.closeConnection(con);
