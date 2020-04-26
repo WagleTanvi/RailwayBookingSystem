@@ -44,11 +44,11 @@
     	    	int x = ps.executeUpdate();
     	    	
     	    	if (x == 1){
-    	    		if(session.getAttribute("role").equals("admin")){
+    	    		if(session.getAttribute("role").equals("administrator")){
     	    			response.sendRedirect("Home.jsp");
     	    		}
     	    		else if(request.getParameter("role").equals("customer_service_rep")){
-    	    			session.setAttribute("role", "customer representative");
+    	    			session.setAttribute("role", "customer_service_rep");
     	    			response.sendRedirect("Home.jsp");
     	    		}
     	    		else if(request.getParameter("role").equals("customer")){
