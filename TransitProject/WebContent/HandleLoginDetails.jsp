@@ -34,7 +34,7 @@
      			}
      			else if (session.getAttribute("type").equals("login")){
      				
-     				//should only be getting one user after this query
+     				//should only be getting one user after this query - bnd28
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
      				if (rs.next()) {
      					System.out.println("Username: " + rs.getString("username"));
@@ -44,6 +44,7 @@
      			        session.setAttribute("user", rs.getString("username"));
      			        session.setAttribute("role", rs.getString("role"));
      			        
+     			        //needed for messaging.jsp delayed/early arrival functionality - bnd28
      			        ArrayList<String> transitLines = new ArrayList<String>();
      			        ArrayList<Integer> scheduleNums = new ArrayList<Integer>();
      			        ArrayList<String> startTimes = new ArrayList<String>();
