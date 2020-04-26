@@ -67,8 +67,8 @@
     	State:<input type="text" name="state" value = "<%= session.getAttribute("a_state") %>"/> <br/>
     <label for="Role">Role:</label>
 	   <select name="role">
-		 <option value="Customer" >Customer</option>
-		 <option value = "Customer Representative">Customer Representative</option>
+		 <option value="customer" >Customer</option>
+		 <option value = "customer_service_rep">Customer Representative</option>
 	   </select>
   	<input type="submit" value="Submit"/>
   </form>
