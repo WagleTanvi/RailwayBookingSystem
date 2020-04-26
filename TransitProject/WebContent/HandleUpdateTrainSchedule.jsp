@@ -19,7 +19,7 @@
 		session.removeAttribute("schedule");
 		session.removeAttribute("update");
 		session.removeAttribute("update_msg");
-		response.sendRedirect("success.jsp");
+		response.sendRedirect("Home.jsp");
 	}
 	else{
 		ApplicationDB db = new ApplicationDB();	
