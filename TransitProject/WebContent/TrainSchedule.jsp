@@ -153,7 +153,7 @@ a {
 	<table>
 		<td><a href="resPage.jsp"><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></a></td>
 		<% if (!personType.equals("customer")){ %> 
-		<td> <button> <a href="manageTrainSchedule.jsp">Manage Train Schedule </a></button></td>
+		<td> <button> <a href="HandleTrainSchedule.jsp?clear=manage">Manage Train Schedule </a></button></td>
 		<%} %>
 	</table>
 	</div>
@@ -192,16 +192,16 @@ a {
 				session.setAttribute("r_fare", request.getParameter("fare"));
 				session.setAttribute("schedule", request.getParameter("schedule"));
 			%> 
-			<h2>Select More Ticket Information</h2>
-			<p><b>Date:</b> <%= session.getAttribute("date") %></p>
-			<p><b>Train Number:</b> <%= request.getParameter("schedule") %></p>
-			<p><b>Origin:</b> <%= session.getAttribute("origin") %></p>
-			<p><b> Destination: </b> <%= session.getAttribute("destination") %></p>
+			<h3>Select More Ticket Information</h3>
+			<b>Date:</b> <%= session.getAttribute("date") %>
+			<b>Train Number:</b> <%= request.getParameter("schedule") %><br>
+			<b>Origin:</b> <%= session.getAttribute("origin") %><br>
+			<b> Destination: </b> <%= session.getAttribute("destination") %> <br>
 			<div class="content">
 				<form action="HandleTrainSchedule.jsp">
 				 <%if (!personType.equals("customer")){ %>
+				 <b>Please select user:</b>
 				  <select name="username" id ="username"> 
-				  		<option  disabled selected>Select User</option>
 				        <%  for (String s : users){ %>
 				            <option value=<%= s%>><%= s %></option>
 				         <%} %>

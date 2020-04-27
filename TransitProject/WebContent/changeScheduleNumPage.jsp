@@ -102,7 +102,7 @@
 				<tr>
 					<td style="border: 1px solid black;"><%= t %></td>
 					<% if (session.getAttribute("changeType").equals("delete")){ %>
-						<td style="border: 1px solid black;"><button><a href="updateTrainSchedule.jsp?schedule=<%=t%>">Delete</a></button></td>
+						<td style="border: 1px solid black;"><button><a href="HandleChangeTrainSchedule.jsp?schedule=<%=t%>">Delete</a></button></td>
 					<% } else { %>
 						<td style="border: 1px solid black;"><button><a href="updateTrainSchedule.jsp?schedule=<%=t%>">Update</a></button></td>
 					<%} %>
