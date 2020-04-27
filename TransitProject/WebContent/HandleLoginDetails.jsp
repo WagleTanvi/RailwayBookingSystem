@@ -53,14 +53,17 @@
      			        //arrivalTimeAfter compare in parallel
      			        ResultSet res = stmt.executeQuery("SELECT t.schedule_num, t.arrival_time, tl.tl_name FROM `train_schedule_timings` t, `reservations` r, `transit_line` tl, `train_schedule_assignment` tsa WHERE tsa.schedule_num = t.schedule_num AND tsa.tl_id = tl.tl_id AND t.schedule_num = r.schedule_num AND r.username='" + session.getAttribute("user") + "' ORDER BY t.arrival_time");
      			        while(res.next()) {
-     			        	System.out.println("transitLine: " + res.getString("tl.tl_name"));
-     			        	transitLines.add(res.getString("tl.tl_name"));
+     			        	if(!(scheduleNums.contains(res.getInt("t.schedule_num")) && startTimes.contains(res.getString("t.arrival_time")))) {
+     			        		System.out.println("transitLine: " + res.getString("tl.tl_name"));
+         			        	transitLines.add(res.getString("tl.tl_name"));
+         			        	
+         			        	System.out.println("scheduleNum: " + res.getInt("t.schedule_num"));
+         			        	scheduleNums.add(res.getInt("t.schedule_num"));
+         			        	
+         			        	System.out.println("startTimes: " + res.getString("t.arrival_time"));
+         			        	startTimes.add(res.getString("t.arrival_time"));
+     			        	}
      			        	
-     			        	System.out.println("scheduleNum: " + res.getInt("t.schedule_num"));
-     			        	scheduleNums.add(res.getInt("t.schedule_num"));
-     			        	
-     			        	System.out.println("startTimes: " + res.getString("t.arrival_time"));
-     			        	startTimes.add(res.getString("t.arrival_time"));
      			        }
      			      	
      			        session.setAttribute("transitLinesInit", transitLines);
