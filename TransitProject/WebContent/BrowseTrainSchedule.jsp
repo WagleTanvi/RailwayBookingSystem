@@ -37,7 +37,7 @@
 		<td>
 			<select name="b_line" id ="b_line"> 
 			<%if (session.getAttribute("b_line") == null){ %>
-				<option  disabled selected>Select Your Destination Station</option>
+				<option  disabled selected>Select a Transit Line</option>
 			<% } %>
 	        <%  for (String s : lines){ 
 	        		String s_temp = s.replace(" ", "+");

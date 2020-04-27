@@ -46,7 +46,7 @@ public class TrainScheduleObject {
 				"<td style=\"border: 1px solid black;\">" + travelTime + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + "$"+ cost + "</td>";
 //		if (personType.contentEquals("customer")) {
-			html += "<td style=\"border: 1px solid black;\"><a href='?fare="+cost+"&schedule="+scheduleNum+"#popup1'><button> Register </button></a>" + "</td>";
+			html += "<td style=\"border: 1px solid black;\"><a href='?fare="+cost+"&schedule="+scheduleNum+"#popup1'><button> Reserve </button></a>" + "</td>";
 //		}	
 		System.out.println(html);
 		return html;
