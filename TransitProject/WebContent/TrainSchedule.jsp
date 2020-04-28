@@ -4,6 +4,9 @@
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
 <%@ page import="javax.servlet.http.*,javax.servlet.*"%>
 <%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.text.DateFormat" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -75,6 +78,8 @@ a {
 		while (rs.next()){
 			users.add(rs.getString("username"));
 		}
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
 		/* if (session.getAttribute("data") != null){
 			for (TrainScheduleObject t: (ArrayList<TrainScheduleObject>)session.getAttribute("data")){
 				out.println(t);
@@ -99,11 +104,11 @@ a {
 	<tr>
 		<td>
 			<%if (session.getAttribute("date") == null){ %>
-				<input type="date" id="date" name="date" > <!--  ONLY SUPPORTED IN Internet Explorer --> 	
+				<input type="date" id="date" name="date" min="<%=dateFormat.format(date)%>" > <!--  ONLY SUPPORTED IN Internet Explorer --> 	
 			<%
 	        		} else{
 	        %>
-	        			<input type="date" id="date" name="date" value=<%= session.getAttribute("date") %>>
+	        			<input type="date" id="date" name="date"  min=<%=dateFormat.format(date)%> value=<%= session.getAttribute("date") %>>
 	        			
 	         <% } %>
 		</td>
