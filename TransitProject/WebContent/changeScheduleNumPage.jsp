@@ -113,7 +113,7 @@
 	<%} %>
 	</div>
 	
-	<% if (session.getAttribute("change_msg") != null) {  %>
+	<% if (session.getAttribute("change_msg") != null && !session.getAttribute("change_msg").equals("Please input transit line.")) {  %>
 		<% if (session.getAttribute("change_msg").equals("Successfully Deleted!")) {
 			 session.removeAttribute("schedule_nums");
 			 session.removeAttribute("changeType");
@@ -129,6 +129,17 @@
 			</div>
 		</div>
 		<%} %>
-	<%} %> 
+	<%} %>
+	<% if (session.getAttribute("change_msg") != null && session.getAttribute("change_msg").equals("Please input transit line.")) {  %>
+		<div id="popup1" class="overlay">
+			<div class="popup">
+				<p><%= session.getAttribute("change_msg")%></p>
+				<% session.removeAttribute("change_msg");%>
+				<div class="content">
+					<button><a href=""> Close</a></button>
+				</div>
+			</div>
+		</div>
+	<%} %>  
 </body>
 </html>

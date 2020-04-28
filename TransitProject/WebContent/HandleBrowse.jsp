@@ -16,9 +16,10 @@
 		session.removeAttribute("b_data");
 		session.removeAttribute("b_sort");
 		session.removeAttribute("b_line");
+		session.removeAttribute("b_msg");
 		response.sendRedirect("Home.jsp");
 	}
-	else{
+	else if (request.getParameter("sort") != null && request.getParameter("b_line") != null){
 	ApplicationDB db = new ApplicationDB();	
 	Connection con = db.getConnection();
 	Statement stmt = con.createStatement();
@@ -59,8 +60,10 @@
 	session.setAttribute("b_sort", request.getParameter("sort"));
 	response.sendRedirect("BrowseTrainSchedule.jsp");  
 	}
-	
-	
+	else if (request.getParameter("sort") == null || request.getParameter("b_line") == null){
+		session.setAttribute("b_msg", "Please choose a transit line and sort.");
+		response.sendRedirect("BrowseTrainSchedule.jsp");
+	}
 	
 	%>
 </body>
