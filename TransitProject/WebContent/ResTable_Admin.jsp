@@ -1,3 +1,4 @@
+<!-- Written By: Vancha Verma vv199 -->
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     import="com.TransitProject.pkg.*"%>
@@ -13,66 +14,66 @@
 <body>
 <h1 style="text-align:center; top:50px;"> User Reservations</h1>
 <%		try{
-			
-			//connect to database 
-			ApplicationDB db = new ApplicationDB(); 
+
+			//connect to database
+			ApplicationDB db = new ApplicationDB();
 			Connection con = db.getConnection();
 			Statement stmt = con.createStatement();
-			String users = "SELECT distinct r.username from reservations r;"; 
-			
+			String users = "SELECT distinct r.username from reservations r;";
+
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(users); %>
 			<form action = "resPage.jsp" method= "post">
 			<select name="username" id="username">
 			<option value="" selected>All users</option>
-			
+
 			<%
-			while(result.next()) {	
+			while(result.next()) {
 			%>
   			<option value=<%=result.getString("r.username")%> ><%out.print(result.getString("r.username"));%> </option>
-			
+
 			<%
 			}
 			%>
 			</select>
-			
+
 			<%
-			String lineName = "SELECT tl.tl_id from transit_line tl;"; 
+			String lineName = "SELECT tl.tl_id from transit_line tl;";
 			result = stmt.executeQuery(lineName); %>
-			
+
 			<select name="transitLine" id="transitLine">
 			<option value="" selected>All Transit Lines</option>
 			<%
-			while(result.next()) {	
+			while(result.next()) {
 			%>
-  			
+
   			<option value=<%=result.getString("tl.tl_id")%> ><%out.print(result.getString("tl.tl_id"));%> </option>
-			
+
 			<%
 			}
 			%>
 			</select>
-		
+
 			<%
-			String trainID = "SELECT t.train_id from train t;"; 
+			String trainID = "SELECT t.train_id from train t;";
 			result = stmt.executeQuery(trainID); %>
-			
+
 			<select name="trainID" id="trainID">
 			<option value="" selected>All Trains</option>
 			<%
-			while(result.next()) {	
+			while(result.next()) {
 			%>
-  			
+
   			<option value=<%=result.getString("t.train_id")%> ><%out.print(result.getString("t.train_id"));%> </option>
-			
+
 			<%
 			}
-			
-			
+
+
 			%>
-			
+
 			</select>
-		
+
 			<INPUT TYPE="submit" VALUE="Filter"/>
 			</form>
 			<%
@@ -84,107 +85,130 @@
 		%>
 
 <table id = "resvationTable" align = "center" style="width:90%">
-  
+
   	<tr>
-  		
-    	<th>UserName </th>
-    	<th>Transit Line</th>
+  		<th>User</th>
+  		<th>Transit Line</th>
     	<th>Train ID</th>
-    	<th>Reservation ID </th>
-    	<th>Date Reserved</th>
-    	<th>Date Bought</th>
-    	<th>Class</th>
-    	<th>Total Cost</th>
     	<th>Origin</th>
     	<th>Destination</th>
-    	<th> Edit </th>
+    	<th>Date Reserved</th>
+    	<th>Arrival Time </th>
+    	<th>Cost</th>
+    	<th>Class</th>
+    	<th>Ticket Type</th>
+    	<th>Discount</th>
+    	<th>Date Bought</th>
+    	<th>Edit</th>
 	</tr>
 
 <%
 
 		try{
-			
-			//connect to database 
-			ApplicationDB db = new ApplicationDB(); 
-			Connection con = db.getConnection();
-			Statement stmt = con.createStatement();
-			String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.username, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa WHERE r.schedule_num = tsa.schedule_num";
-			
+				//connect to database
+				ApplicationDB db = new ApplicationDB();
+				Connection con = db.getConnection();
+				Statement stmt = con.createStatement();
+				//String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst WHERE r.schedule_num = tsa.schedule_num AND r.username = '" + session.getAttribute("user") + "' ORDER BY tsa.train_id;";
+				String str = "SELECT tsa.tl_id, tst.arrival_time, tsa.train_id, r.*"
+						+ " FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst, transit_line_route tlr"
+						+ " WHERE r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num";
+				//sString v_rid = "";
+				//System.out.println(session.getAttribute("user"));
+
+
 			if(request.getParameter("username") != null){
 				if(!(request.getParameter("username").equals(""))){
-					str = str + " AND r.username = '" + request.getParameter("username") +"'";  
+					str = str + " AND r.username = '" + request.getParameter("username") +"'";
 				}
 			}
-			
+
 			if(request.getParameter("username") != null){
 				if(!(request.getParameter("transitLine").equals(""))){
-					str = str + " AND tsa.tl_id = '" + request.getParameter("transitLine") +"'";  
+					str = str + " AND tsa.tl_id = '" + request.getParameter("transitLine") +"'";
 				}
 			}
-			
+
 			if(request.getParameter("username") != null){
 				if(!(request.getParameter("trainID").equals(""))){
-					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";  
+					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";
 				}
 			}
-			
-			str = str + " ORDER BY r.username, tsa.train_id;"; 
 
-			//out.print(str); 
-			//sString v_rid = ""; 
-			//System.out.println(session.getAttribute("user")); 
-			
-			//to hold all the information from the database 
-			//ArrayList<ResObj> customerTable = new ArrayList<ResObj>(); 
-			//ResObj entry = new ResObj("1", "", 1, "", "", "", "", 1, 2); 
-			
-			
+			str = str + " ORDER BY r.username, tsa.train_id;";
+
+			System.out.println(str);
+
+			//to hold all the information from the database
+			ArrayList<ResObj> customerTable = new ArrayList<ResObj>();
+
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
-			
 
-			while(result.next()) {	
-				//session.setAttribute("v_rid", ); 
-				//System.out.println(v_rid); 	
-			
-				out.print("<tr>"); 
-				out.print("<td>");
-				out.print(result.getString("r.username")); 
-				out.print("</td> <td>"); 
-				out.print(result.getString("tsa.tl_id"));
-				out.print("</td> <td>");
-				out.print(result.getString("tsa.train_id"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.rid"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.date_reserved"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.date_ticket"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.class"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.total_cost"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.origin"));
-				out.print("</td> <td>");
-				out.print(result.getString("r.destination"));
-				out.print("</td><td>");
-				%> 
-					<a href="editRes.jsp?rid=${entry.getName()}" >Edit</a>
-					
-				<%
-				out.print("</td></tr>"); 
-				
+			while(result.next()) {
+				ResObj entry = new ResObj();
+				entry.setUser(result.getString("r.username"));
+				entry.setTransit(result.getString("tsa.tl_id"));
+				entry.setTrain(result.getString("tsa.train_id"));
+				entry.setRid(result.getString("r.rid"));
+				entry.setBought(result.getString("r.date_reserved"));
+				entry.setResDate(result.getString("r.date_ticket"));
+				entry.setClass(result.getString("r.class"));
+				entry.setCost("$"+ result.getString("r.total_cost"));
+				entry.setTime(result.getString("tst.arrival_time"));
+				entry.setDisc(result.getString("r.discount"));
+				if(result.getString("r.discount").equals("Normal")){
+					entry.setDisc("None");
+				}
+				if(result.getString("r.trip").equals("One")){
+					entry.setTrip("One-Way");
+				} else {
+					entry.setTrip(result.getString("r.trip"));
+				}
+
+				entry.setDest(result.getString("r.destination"));
+				entry.setOrigin(result.getString("r.origin"));
+
+				customerTable.add(entry);
 			}
-			
-			db.closeConnection(con);
+
+
+			for(int i = 0; i < customerTable.size(); i++){
+				String getS = "SELECT s.name, s.station_id FROM station s WHERE s.station_id = "
+				+ customerTable.get(i).getOrigin() + " OR s.station_id = " + customerTable.get(i).getDest();
+				ResultSet origin = stmt.executeQuery(getS);
+				while(origin.next()) {
+					if((origin.getString("station_id").equals(customerTable.get(i).getOrigin()))){
+						customerTable.get(i).setOrigin(origin.getString("name"));
+					}
+
+					if((origin.getString("station_id").equals(customerTable.get(i).getDest()))){
+						customerTable.get(i).setDest(origin.getString("name"));
+					}
+
+				}
+			}
+
+			db.closeConnection(con); //close database
+
+			for(int i = 0; i < customerTable.size(); i++){
+				out.print("<tr>");
+				out.print(customerTable.get(i).printTable_Rep());
+				out.print("<td>");
+				%>
+				<button>
+					<a style="color: black; "href= "editRes.jsp?v_val=<%=customerTable.get(i).getRid()%>" >Edit</a>
+				</button>
+
+				<%
+				out.print("</td></tr>");
+			}
 		} catch (Exception e) {
 			out.print(e);
 		}
-	
-		
+
 	%>
-	
+
 	</table>
 
 </body>
