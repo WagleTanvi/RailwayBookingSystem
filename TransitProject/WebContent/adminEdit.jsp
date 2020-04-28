@@ -11,7 +11,7 @@
 <title>Table with database</title>
 </head>
 <body>
-<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp">Home</a></button>
+
 <button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 	<% 
 	
