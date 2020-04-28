@@ -11,7 +11,9 @@
 <body>
 	 <%
      	String type = request.getParameter("command");
+	if(!session.getAttribute("role").equals("administrator")){
 	 	session.setAttribute("role", "null");
+	}
      	session.setAttribute("type", type);
      	session.setAttribute("filterRole", "all");
      	if (type.equals("register")){
