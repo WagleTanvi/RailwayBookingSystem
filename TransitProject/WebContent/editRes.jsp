@@ -25,7 +25,7 @@
 				<p><b>Change Ticket Type: </b></p>
 				<input type="radio" id="one" name="trip" value="One" checked/>
 				<label for="one">One-Way</label>
-				<input type="radio" id="two" name="trip" value="Round">
+				<input type="radio" id="two" name="trip" value="Two">
 				<label for="two">Round-Trip</label>
 				<input type="radio" id="weekly" name="trip" value="Weekly">
 				<label for="weekly">Weekly</label>
