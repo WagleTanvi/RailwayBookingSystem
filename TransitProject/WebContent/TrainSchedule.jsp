@@ -203,7 +203,7 @@ a {
 			<b>Origin:</b> <%= session.getAttribute("origin") %><br>
 			<b> Destination: </b> <%= session.getAttribute("destination") %> <br>
 			<div class="content">
-				<form action="HandleTrainSchedule.jsp">
+				<form action="HandleTrainSchedule.jsp" method= "post">
 				 <%if (!personType.equals("customer")){ %>
 				 <b>Please select user:</b>
 				  <select name="username" id ="username"> 
@@ -213,21 +213,21 @@ a {
 			       </select> 
 			       <% } %>
 				  <p><b>Please select ticket type:</b></p>
-				  <input type="radio" id="one" name="trip" value="one" checked>
+				  <input type="radio" id="one" name="trip" value="One" checked>
 				  <label for="one">One-Way</label>
-				  <input type="radio" id="two" name="trip" value="two">
+				  <input type="radio" id="two" name="trip" value="Two">
 				  <label for="two">Round-Trip</label><br>
-				  <input type="radio" id="weekly" name="trip" value="weekly">
+				  <input type="radio" id="weekly" name="trip" value="Weekly">
 				  <label for="weekly">Weekly</label> 
-				  <input type="radio" id="monthly" name="trip" value="monthly">
+				  <input type="radio" id="monthly" name="trip" value="Monthly">
 				  <label for="monthly">Monthly</label><br>
 				  
 				  <p><b>Please select discount type:</b></p>
-				  <input type="radio" id="normal" name="discount" value="normal" checked>
+				  <input type="radio" id="normal" name="discount" value="Normal" checked>
 				  <label for="discount">Normal</label>
-				  <input type="radio" id="senior/child" name="discount" value="senior/child">
+				  <input type="radio" id="senior/child" name="discount" value="Senior/Child">
 				  <label for="senior">Senior</label> 
-				  <input type="radio" id="disabled" name="discount" value="disabled">
+				  <input type="radio" id="disabled" name="discount" value="Disabled">
 				  <label for="child/disabled">Child/Disabled</label><br>
 				  
 				   <p><b>Please select class:</b></p>
@@ -237,7 +237,7 @@ a {
 				  <label for="First">First</label>
 				  <input type="radio" id="Economy" name="class" value="Economy">
 				  <label for="Economy">Economy</label><br><br>
-			       <input type="submit" value="Submit">
+			       <input type="submit" value="Submit" name = "res_change">
 				  <button><a href="#">Close</a></button>
 				</form>
 			</div>

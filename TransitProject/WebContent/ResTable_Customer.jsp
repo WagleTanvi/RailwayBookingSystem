@@ -8,57 +8,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Reservations </title>
 </head>
 <body>
-<h1 style="text-align:center; top:50px;"> User Reservations</h1>
-<%		try{
-	
-	
-			
-			//connect to database 
-			//out.println("here");
-			ApplicationDB db = new ApplicationDB(); 
-			Connection con = db.getConnection();
-			Statement stmt = con.createStatement();
-			//out.println("here");
-			String trainID = "SELECT t.train_id from train t;"; 
-			
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(trainID);  %>
-			<form action = "resPage.jsp" method= "post">
-			
-			<select name="trainID" id="trainID" value="">
-			<option value="" selected>All Trains</option>
-			
-			<%
-			while(result.next()) {	
-			%>
-  			
-  			<option value=<%=result.getString("t.train_id")%> ><%out.print(result.getString("t.train_id"));%> </option>
-			
-			<%
-			}
-			
-			
-			%>
-			
-			</select>
-		
-			<INPUT TYPE="submit" VALUE="Filter"/>
-			</form>
-			<%
-			db.closeConnection(con);
-		} catch (Exception e) {
-			out.print(e);
-		}
-		%>
+<% out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
 
 <table id = "resvationTable" align = "center" style="width:90%">
   
   	<tr>
-  		<th>User</th>
-  		<th>Transit Line</th>
+    	<th>Transit Line</th>
     	<th>Train ID</th>
     	<th>Origin</th>
     	<th>Destination</th>
@@ -80,20 +37,12 @@
 			ApplicationDB db = new ApplicationDB(); 
 			Connection con = db.getConnection();
 			Statement stmt = con.createStatement();
-			
+			//String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst WHERE r.schedule_num = tsa.schedule_num AND r.username = '" + session.getAttribute("user") + "' ORDER BY tsa.train_id;";
 			String str = "SELECT tsa.tl_id, tst.arrival_time, tsa.train_id, r.*" 
 					+ " FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst, transit_line_route tlr" 
-					+ " WHERE r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num"; 
+					+ " WHERE r.username = '" + session.getAttribute("user") + "' AND r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num; "; 
 			//sString v_rid = ""; 
-			//System.out.println(session.getAttribute("user"));
-			if(request.getParameter("trainID") != null) {
-				if(!(request.getParameter("trainID").equals(""))){
-					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";  
-				}
-			}
-			str = str + " ORDER BY r.username, tsa.train_id;";
-			
-			//System.out.println(str); 
+			//System.out.println(session.getAttribute("user")); 
 			
 			//to hold all the information from the database 
 			ArrayList<ResObj> customerTable = new ArrayList<ResObj>(); 
@@ -103,7 +52,7 @@
 	
 			while(result.next()) {	
 				ResObj entry = new ResObj(); 
-				entry.setUser(result.getString("r.username")); 
+				
 				entry.setTransit(result.getString("tsa.tl_id")); 
 				entry.setTrain(result.getString("tsa.train_id")); 
 				entry.setRid(result.getString("r.rid")); 
@@ -111,8 +60,8 @@
 				entry.setResDate(result.getString("r.date_ticket"));
 				entry.setClass(result.getString("r.class"));
 				entry.setCost("$"+ result.getString("r.total_cost"));
-				entry.setTime(result.getString("tst.arrival_time"));
-				entry.setDisc(result.getString("r.discount")); 
+				entry.setTime(result.getString("tst.arrival_time")); 
+				entry.setDisc(result.getString("r.discount"));
 				if(result.getString("r.discount").equals("Normal")){
 					entry.setDisc("None"); 
 				}
@@ -149,7 +98,7 @@
 			
 			for(int i = 0; i < customerTable.size(); i++){
 				out.print("<tr>");
-				out.print(customerTable.get(i).printTable_Rep());
+				out.print(customerTable.get(i).printTable());
 				out.print("<td>");
 				%>
 				<button>
