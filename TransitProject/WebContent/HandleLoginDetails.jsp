@@ -35,7 +35,8 @@
      			}
      			else if (session.getAttribute("type").equals("login")){
      				
-     				//should only be getting one user after this query - bnd28
+     				//bnd28 work starting here
+     				//should only be getting one user after this query - written by bnd28
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
 
      				if (rs.next()) {
@@ -46,7 +47,7 @@
      			        session.setAttribute("user", rs.getString("username"));
      			        session.setAttribute("role", rs.getString("role"));
      			        
-     			        //needed for messaging.jsp delayed/early arrival functionality - bnd28
+     			        //needed for messaging.jsp delayed/early arrival functionality - written by bnd28
      			        ArrayList<String> transitLines = new ArrayList<String>();
      			        ArrayList<Integer> scheduleNums = new ArrayList<Integer>();
      			        ArrayList<String> startTimes = new ArrayList<String>();
@@ -71,6 +72,8 @@
      			        session.setAttribute("startTimesInit", startTimes);
      			        
      			        response.sendRedirect("Home.jsp");
+     			        
+     			        //bnd28 work ending here
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
      			    }
