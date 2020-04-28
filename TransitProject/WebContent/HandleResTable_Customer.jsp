@@ -8,52 +8,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Reservations </title>
+<title>Insert title here</title>
 </head>
 <body>
-<h1 style="text-align:center; top:50px;"> User Reservations</h1>
-<%		try{
-			
-			//connect to database 
-			ApplicationDB db = new ApplicationDB(); 
-			Connection con = db.getConnection();
-			Statement stmt = con.createStatement();
-			String trainID = "SELECT t.train_id from train t;"; 
-			
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(trainID);  %>
-			<form action = "resPage.jsp" method= "post">
-			
-			<select name="trainID" id="trainID" value="">
-			<option value="" selected>All Trains</option>
-			<%
-			while(result.next()) {	
-			%>
-  			
-  			<option value=<%=result.getString("t.train_id")%> ><%out.print(result.getString("t.train_id"));%> </option>
-			
-			<%
-			}
-			
-			
-			%>
-			
-			</select>
-		
-			<INPUT TYPE="submit" VALUE="Filter"/>
-			</form>
-			<%
-			db.closeConnection(con);
-		} catch (Exception e) {
-			out.print(e);
-		}
-		%>
+<% out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
 
 <table id = "resvationTable" align = "center" style="width:90%">
   
   	<tr>
-  		
-    	<th>UserName </th>
     	<th>Transit Line</th>
     	<th>Train ID</th>
     	<th>Reservation ID </th>
@@ -74,15 +36,7 @@
 			ApplicationDB db = new ApplicationDB(); 
 			Connection con = db.getConnection();
 			Statement stmt = con.createStatement();
-			String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.username, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa WHERE r.schedule_num = tsa.schedule_num";
-			
-			if(!(request.getParameter("trainID").equals(""))){
-				str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";  
-			}
-			
-			str = str + " ORDER BY r.username, tsa.train_id;"; 
-			
-			//out.print(str); 
+			String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa WHERE r.schedule_num = tsa.schedule_num AND r.username = '" + session.getAttribute("user") + "' ORDER BY tsa.train_id;";
 			//sString v_rid = ""; 
 			//System.out.println(session.getAttribute("user")); 
 			
@@ -98,8 +52,6 @@
 				//System.out.println(v_rid); 
 				out.print("<tr>"); 
 				out.print("<td>");
-				out.print(result.getString("r.username")); 
-				out.print("</td> <td>"); 
 				out.print(result.getString("tsa.tl_id"));
 				out.print("</td> <td>");
 				out.print(result.getString("tsa.train_id"));
@@ -120,7 +72,7 @@
 				out.print("</td> <td>");
 				%>
 					<button>
-					<a style="color: black"; id = "rid" value=<%=result.getString("r.rid")%>; href="editRes.jsp">Edit</a>
+					<a style="color: black; "href="editRes.jsp">Edit</a>
 					</button>
 				<%
 				out.print("</td></tr>"); 
