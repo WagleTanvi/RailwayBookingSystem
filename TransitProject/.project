@@ -3,6 +3,7 @@
 	<name>TransitProject</name>
 	<comment></comment>
 	<projects>
+		<project>mysql-connector-java-5.1.29-bin</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

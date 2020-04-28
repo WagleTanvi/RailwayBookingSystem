@@ -153,7 +153,7 @@ a {
 	<table>
 		<td><a href="resPage.jsp"><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></a></td>
 		<% if (!personType.equals("customer")){ %> 
-		<td> <button> <a href="manageTrainSchedule.jsp">Manage Train Schedule </a></button></td>
+		<td> <button> <a href="HandleTrainSchedule.jsp?clear=manage">Manage Train Schedule </a></button></td>
 		<%} %>
 	</table>
 	</div>
@@ -192,37 +192,37 @@ a {
 				session.setAttribute("r_fare", request.getParameter("fare"));
 				session.setAttribute("schedule", request.getParameter("schedule"));
 			%> 
-			<h2>Select More Ticket Information</h2>
-			<p><b>Date:</b> <%= session.getAttribute("date") %></p>
-			<p><b>Train Number:</b> <%= request.getParameter("schedule") %></p>
-			<p><b>Origin:</b> <%= session.getAttribute("origin") %></p>
-			<p><b> Destination: </b> <%= session.getAttribute("destination") %></p>
+			<h3>Select More Ticket Information</h3>
+			<b>Date:</b> <%= session.getAttribute("date") %>
+			<b>Train Number:</b> <%= request.getParameter("schedule") %><br>
+			<b>Origin:</b> <%= session.getAttribute("origin") %><br>
+			<b> Destination: </b> <%= session.getAttribute("destination") %> <br>
 			<div class="content">
-				<form action="HandleTrainSchedule.jsp">
+				<form action="HandleTrainSchedule.jsp" method= "post">
 				 <%if (!personType.equals("customer")){ %>
+				 <b>Please select user:</b>
 				  <select name="username" id ="username"> 
-				  		<option  disabled selected>Select User</option>
 				        <%  for (String s : users){ %>
 				            <option value=<%= s%>><%= s %></option>
 				         <%} %>
 			       </select> 
 			       <% } %>
 				  <p><b>Please select ticket type:</b></p>
-				  <input type="radio" id="one" name="trip" value="one" checked>
+				  <input type="radio" id="one" name="trip" value="One" checked>
 				  <label for="one">One-Way</label>
-				  <input type="radio" id="two" name="trip" value="two">
+				  <input type="radio" id="two" name="trip" value="Two">
 				  <label for="two">Round-Trip</label><br>
-				  <input type="radio" id="weekly" name="trip" value="weekly">
+				  <input type="radio" id="weekly" name="trip" value="Weekly">
 				  <label for="weekly">Weekly</label> 
-				  <input type="radio" id="monthly" name="trip" value="monthly">
+				  <input type="radio" id="monthly" name="trip" value="Monthly">
 				  <label for="monthly">Monthly</label><br>
 				  
 				  <p><b>Please select discount type:</b></p>
-				  <input type="radio" id="normal" name="discount" value="normal" checked>
+				  <input type="radio" id="normal" name="discount" value="Normal" checked>
 				  <label for="discount">Normal</label>
-				  <input type="radio" id="senior/child" name="discount" value="senior/child">
+				  <input type="radio" id="senior/child" name="discount" value="Senior/Child">
 				  <label for="senior">Senior</label> 
-				  <input type="radio" id="disabled" name="discount" value="disabled">
+				  <input type="radio" id="disabled" name="discount" value="Disabled">
 				  <label for="child/disabled">Child/Disabled</label><br>
 				  
 				   <p><b>Please select class:</b></p>
@@ -232,7 +232,7 @@ a {
 				  <label for="First">First</label>
 				  <input type="radio" id="Economy" name="class" value="Economy">
 				  <label for="Economy">Economy</label><br><br>
-			       <input type="submit" value="Submit">
+			       <input type="submit" value="Submit" name = "res_change">
 				  <button><a href="#">Close</a></button>
 				</form>
 			</div>

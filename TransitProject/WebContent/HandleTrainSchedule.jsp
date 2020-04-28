@@ -29,6 +29,16 @@
 		session.removeAttribute("t_error");
 		response.sendRedirect("Home.jsp");
 	}
+	else if (request.getParameter("clear") != null && request.getParameter("clear").equals("manage")){
+		session.removeAttribute("data");
+		session.removeAttribute("direction");
+		session.removeAttribute("origin");
+		session.removeAttribute("destination");
+		session.removeAttribute("direction");
+		session.removeAttribute("date");
+		session.removeAttribute("t_error");
+		response.sendRedirect("manageTrainSchedule.jsp");
+	}
 	else if (request.getParameter("trip") != null){
 		session.removeAttribute("data");
 		session.removeAttribute("direction");
@@ -39,7 +49,12 @@
 		response.sendRedirect("resPage.jsp");
 	}
 	else{
-		String date = request.getParameter("date");
+	if (request.getParameter("date") == null || request.getParameter("origin") == null || request.getParameter("destination") == null || request.getParameter("date") == "" || request.getParameter("origin") == "" || request.getParameter("destination") == ""){
+			session.setAttribute("t_error", "Please select a date, origin, and destination.");
+			System.out.println("invalid");
+		}
+		else{		
+        String date = request.getParameter("date");
 		String origin = request.getParameter("origin").replace("+", " ");
 		String destination = request.getParameter("destination").replace("+", " ");
 		/* String sort = request.getParameter("sort"); */
@@ -85,7 +100,7 @@
 				}
 				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s where r.end_station_id = s.station_id and s.name = ?";
 				ps = con.prepareStatement(statement);
-				ps.setString(1,origin);
+				ps.setString(1,destination);
 			    rs = ps.executeQuery();
 			    int end = -1;
 				if (rs.next()){
@@ -102,10 +117,10 @@
 				session.setAttribute("direction", direction);
 				//out.println(direction);
 				
-				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s where r.end_station_id = s.station_id and s.name = ?";
+				/*statement = "SELECT min(r.hop_number) min from transit_line_route r, station s where r.end_station_id = s.station_id and s.name = ?";
 				ps = con.prepareStatement(statement);
 				ps.setString(1,origin);
-			    rs = ps.executeQuery();
+			    rs = ps.executeQuery();*/
 			    
 			    statement = 
 			    		"SELECT tl.tl_name, r.route_id, ts.schedule_num, t.train_id,  ? start, ? end, min(ts.departure_time) departure, max(ts.arrival_time) arrival, SUBTIME(max(ts.arrival_time), min(ts.departure_time)) travel_time, (tl.fare)*(max(r.hop_number) - min(r.hop_number)+1) cost"
@@ -152,6 +167,7 @@
 			session.setAttribute("origin", origin);
 			session.setAttribute("destination", destination);
 			session.setAttribute("date", date);
+        }
 			response.sendRedirect("TrainSchedule.jsp");  
 	}
 	
