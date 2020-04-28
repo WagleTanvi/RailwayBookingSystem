@@ -15,6 +15,44 @@
 		%>
 	</head>
 	
+	<style>
+		body {
+			font-family: Arial, Helvetica, sans-serif;
+		}
+		table, td, th {
+  			border: 1px solid black;
+		}
+		
+		table {
+		  border-collapse: collapse;
+		  margin-bottom: 2%;
+		  margin-top: 2%;
+		  width: 80%;
+   		  margin-left: 10%;
+		}
+		
+		th {
+		  text-align: left;
+		}
+		
+		h3, h1 {
+			text-align: center;
+		}
+		
+		.selection {
+			margin: auto;
+		    width: 50%;
+		    /* border: 3px solid green; */
+		    padding: 10px;
+		}
+		
+		.selection * {
+			margin-left: 10%;
+		}
+
+	
+	</style>
+	
 	<body>
 		&nbsp;
 		&nbsp;
@@ -22,51 +60,55 @@
 		
 		<a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp"><button style="background-color: green; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>
 		<a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp"><button style="background-color: red; position:absolute; top:2%; right: 4%; border-radius: 10px;">Logout</button></a>
+		<div class="selection">
+			<form action="salesReport.jsp">
+				<select name="month" id="Month">
+				  <option value = "">- Month -</option> 
+				  <option value = "'JANUARY'">Jan</option>
+				  <option value = "'FEBRUARY'">Feb</option>
+				  <option value = "'MARCH'">Mar</option>
+				  <option value = "'APRIL'">Apr</option>
+				  <option value = "'MAY'">May</option>
+				  <option value = "'JUNE'">Jun</option>
+				  <option value = "'JULY'">Jul</option>
+				  <option value = "'AUGUST'">Aug</option>
+				  <option value = "'SEPTEMBER'">Sep</option>
+				  <option value = "'OCTOBER'">Oct</option>
+				  <option value = "'NOVEMBER'">Nov</option>
+				  <option value = "'DECEMBER'">Dec</option>
+				</select>
+				<button>Submit</button>
+			</form>
 		
-		<form action="salesReport.jsp">
-			<select name="listing" id="Listing">
-			  <option value = "">- Listing -</option>
-			  <option value = "TL">Transit Line</option>
-			  <option value = "CUS">Customer</option>
-			  <option value = "DC">Destination City</option>
-			  <option value = "BTL">Best Line </option>
-			  <option value = "BCUS">Best Customer</option>
-			</select>
-		&nbsp;
-		&nbsp;
-			<select name="month" id="Month">
-			  <option value = "">- Month -</option> 
-			  <option value = "'JANUARY'">Jan</option>
-			  <option value = "'FEBRUARY'">Feb</option>
-			  <option value = "'MARCH'">Mar</option>
-			  <option value = "'APRIL'">Apr</option>
-			  <option value = "'MAY'">May</option>
-			  <option value = "'JUNE'">Jun</option>
-			  <option value = "'JULY'">Jul</option>
-			  <option value = "'AUGUST'">Aug</option>
-			  <option value = "'SEPTEMBER'">Sep</option>
-			  <option value = "'OCTOBER'">Oct</option>
-			  <option value = "'NOVEMBER'">Nov</option>
-			  <option value = "'DECEMBER'">Dec</option>
-			</select>
-			
-			<button>Submit</button>
-			
-		</form>
 		
-		<table style="width:100%">
+			<form action="salesReport.jsp">
+				<select name="listing" id="Listing">
+				  <option value = "">- Listing -</option>
+				  <option value = "TL">Transit Line</option>
+				  <option value = "CUS">Customer</option>
+				  <option value = "DC">Destination City</option>
+				  <option value = "BTL">Best Line </option>
+				  <option value = "BCUS">Best Customer</option>
+				</select>
+				<button>Submit</button>
+			</form>
+		</div>
+		<table>
 			<% 
 	   		if (request.getParameter("month") != null && !request.getParameter("month").isEmpty()){
 				String month = request.getParameter("month");
 				System.out.println("month: " + request.getParameter("month"));
 				ResultSet rs = stmt.executeQuery("SELECT sum(total_cost) FROM reservations WHERE DATE_FORMAT(date_reserved, '%M') = " + month);
+				out.println("<h3>");
 				if(rs.next()){
 					if(rs.getString(1) != null){
 						out.println(month.replace("'", "")+" TOTAL REVENUE: $"+rs.getString(1));
+						out.println("</h3>");
 						out.print("<tr><th>Customer</th><th>Sales</th><th>Schedule #</th><th>Class</th><th>Ticket Date</th><th>Reserve Date</th></tr>");
 					}
 					else{
-						out.print("No Data for this month");
+						out.print("No data for this month");
+						out.println("</h3>");
 					}
 				}
 				rs = stmt.executeQuery("SELECT * FROM reservations WHERE DATE_FORMAT(date_reserved, '%M') = " + month 
@@ -81,7 +123,7 @@
 			}
 			%>
 		</table>
-	    <table style="width:100%">
+	    <table>
 	    	<%
 	    	
 	    	if(request.getParameter("listing") != null && !request.getParameter("listing").isEmpty()) {
