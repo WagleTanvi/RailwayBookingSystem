@@ -54,6 +54,10 @@
 		    	response.sendRedirect("changeScheduleNumPage.jsp");
 		    }
 		}
+		else if (request.getParameter("line") == null){
+			session.setAttribute("change_msg", "Please input transit line.");
+	    	response.sendRedirect("changeScheduleNumPage.jsp");
+		}
 	}
 	%>
 

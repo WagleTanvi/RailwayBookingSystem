@@ -12,6 +12,15 @@
 </head>
 <body>
 	<%
+	Enumeration pL = request.getParameterNames();
+	int count = 0;
+	while( pL.hasMoreElements() ){
+		count++;
+		System.out.println(pL.nextElement().toString());
+	 } 
+	System.out.println(count);
+	System.out.println(request.getParameter("line") == null || request.getParameter("train_id") == null || request.getParameter("direction") == null
+			|| count <= 0);
 	if (request.getParameter("clear") != null && request.getParameter("clear").equals("true")){
 		session.removeAttribute("add_train");
 		session.removeAttribute("add_dir");
@@ -31,7 +40,7 @@
 			if (session.getAttribute("add_dir") != null){session.removeAttribute("add_dir");}
 		    response.sendRedirect("addTrainSchedule.jsp");  
 		}
-		else if (request.getParameter("line") != null){
+		else if (request.getParameter("line") != null && request.getParameter("train") != null && request.getParameter("direction") != null){
 			String line = request.getParameter("line").replace("+"," ");
 			String dir = request.getParameter("direction");
 			out.println(line);
@@ -71,7 +80,7 @@
 		    session.setAttribute("add_dir", request.getParameter("direction"));
 			response.sendRedirect("addTrainSchedule.jsp");  
 		}
-		else{
+		else if (session.getAttribute("add_train") != null){
 			boolean success = true;
 			Enumeration parameterList = request.getParameterNames();
 			ArrayList<Integer> hops = new ArrayList<Integer>();
@@ -93,59 +102,80 @@
 			    }
 			 } 
 			if (success == true){
-				ResultSet rs = stmt.executeQuery("Select max(schedule_num)+1 num from train_schedule_assignment;");
-				rs.next();
-				int schedule_num = rs.getInt("num");
-				String line = ((String) session.getAttribute("add_line")).replace("+", " ");
-				String train = (String) session.getAttribute("add_train");
-				out.println(line);
-				String statement = "Select tl_id from transit_line where tl_name = ?";
+				String statement = "select min(tsm.departure_time) dt, max(tsm.arrival_time) at" 
+						+" from train_schedule_assignment ta, train_schedule_timings tsm" 
+						+" where ta.train_id = ? and tsm.schedule_num = ta.schedule_num group by tsm.schedule_num;";
 				PreparedStatement ps = con.prepareStatement(statement);
-				ps.setString(1,line);
-				rs = ps.executeQuery();
-				rs.next();
-				String tl_id = rs.getString("tl_id");
-				statement = "Insert into train_schedule_assignment (schedule_num, train_id, tl_id) values (?,?,?)";
-				ps = con.prepareStatement(statement);
-				ps.setInt(1,schedule_num);
-				ps.setInt(2, Integer.parseInt(train));
-				ps.setString(3, tl_id);
-				int result = ps.executeUpdate();
-				if (result < 0){
-					success = false;
+				ps.setString(1, session.getAttribute("add_train").toString());
+			    ResultSet rs = ps.executeQuery();
+			    boolean validate = true;
+				while (rs.next()){
+					if (times.get(0).compareTo(time.valueOf(rs.getString("dt"))) >= 0 && times.get(0).compareTo(time.valueOf(rs.getString("at"))) <= 0){
+						System.out.print("hey");
+						validate = false;
+						session.setAttribute("add_msg", "This train is already begin used during this time frame. Please choose different times.");
+					}
 				}
-				else {
-						for (int x=0; x < times.size()-1; x++){
-							statement = "Select route_id from transit_line_route where tl_id = ? and hop_number=?";
-						    ps = con.prepareStatement(statement);
-							ps.setString(1,tl_id);
-							ps.setInt(2, hops.get(x));
-							rs = ps.executeQuery();
-							rs.next();
-							int route_number = rs.getInt("route_id");
-							statement = "Insert into train_schedule_timings (schedule_num, route_id, departure_time, arrival_time) values (?,?,?,?)";
-							ps = con.prepareStatement(statement);
-							ps.setInt(1,schedule_num);
-							ps.setInt(2, route_number);
-							ps.setTime(3, times.get(x));
-							ps.setTime(4, times.get(x+1));
-							result = ps.executeUpdate();
-							if (result < 0){
-								success = false;
+				System.out.println("VALIDATE: "+validate);
+				if (validate == true){
+					rs = stmt.executeQuery("Select max(schedule_num)+1 num from train_schedule_assignment;");
+					rs.next();
+					int schedule_num = rs.getInt("num");
+					String line = ((String) session.getAttribute("add_line")).replace("+", " ");
+					String train = (String) session.getAttribute("add_train");
+					out.println(line);
+					statement = "Select tl_id from transit_line where tl_name = ?";
+					ps = con.prepareStatement(statement);
+					ps.setString(1,line);
+					rs = ps.executeQuery();
+					rs.next();
+					String tl_id = rs.getString("tl_id");
+					statement = "Insert into train_schedule_assignment (schedule_num, train_id, tl_id) values (?,?,?)";
+					ps = con.prepareStatement(statement);
+					ps.setInt(1,schedule_num);
+					ps.setInt(2, Integer.parseInt(train));
+					ps.setString(3, tl_id);
+					int result = ps.executeUpdate();
+					if (result < 0){
+						success = false;
+					}
+					else {
+							for (int x=0; x < times.size()-1; x++){
+								statement = "Select route_id from transit_line_route where tl_id = ? and hop_number=?";
+							    ps = con.prepareStatement(statement);
+								ps.setString(1,tl_id);
+								ps.setInt(2, hops.get(x));
+								rs = ps.executeQuery();
+								rs.next();
+								int route_number = rs.getInt("route_id");
+								statement = "Insert into train_schedule_timings (schedule_num, route_id, departure_time, arrival_time) values (?,?,?,?)";
+								ps = con.prepareStatement(statement);
+								ps.setInt(1,schedule_num);
+								ps.setInt(2, route_number);
+								ps.setTime(3, times.get(x));
+								ps.setTime(4, times.get(x+1));
+								result = ps.executeUpdate();
+								if (result < 0){
+									success = false;
+								}
 							}
-						}
-				}
-				if (success == true){
-					/* session.removeAttribute("add");
-				    session.removeAttribute("add_train");
-				    session.removeAttribute("add_line");
-				    session.removeAttribute("add_dir"); */
-				    session.setAttribute("add_msg", "Successfully Added!");
-				    //response.
-				}
+					}
+					if (success == true){
+						/* session.removeAttribute("add");
+					    session.removeAttribute("add_train");
+					    session.removeAttribute("add_line");
+					    session.removeAttribute("add_dir"); */
+					    session.setAttribute("add_msg", "Successfully Added!");
+					    //response.
+					}
+				} // end of validate
 			} // end of success
 			response.sendRedirect("addTrainSchedule.jsp"); 
 		} // end of else
+		else {
+			session.setAttribute("add_msg", "Please input line, train_id and direction.");
+			response.sendRedirect("addTrainSchedule.jsp"); 
+		}
 	}
 	%>
 </body>
