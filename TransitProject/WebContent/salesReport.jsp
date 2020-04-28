@@ -141,7 +141,7 @@
 		    	}
 		    	if(listing.equals("BCUS")){
 		    		out.print("<tr><th>Customer</th><th>Sales</th></tr>");
-			    	ResultSet rs = stmt.executeQuery("SELECT username, sum(total_cost) FROM reservations GROUP BY username ORDER BY total_cost ASC LIMIT 3");
+			    	ResultSet rs = stmt.executeQuery("SELECT username, sum(total_cost) FROM reservations GROUP BY username ORDER BY sum(total_cost) DESC LIMIT 3");
 			    	while (rs.next()){
 			    		String table = "<tr><td>"+rs.getString("username")+"</td><td>"+rs.getString("sum(total_cost)")+"</td></tr>";
 			    		out.println(table);
@@ -157,7 +157,7 @@
 		    	}
 		    	if(listing.equals("BTL")){
 		    		out.print("<tr><th>Transit Line</th><th>Sales</th></tr>");
-		    		ResultSet rs = stmt.executeQuery("SELECT tl_name, sum(total_cost) FROM reservations INNER JOIN train_schedule_assignment ON reservations.schedule_num = train_schedule_assignment.schedule_num INNER JOIN transit_line ON train_schedule_assignment.tl_id = transit_line.tl_id group by tl_name ORDER BY total_cost ASC LIMIT 3");
+		    		ResultSet rs = stmt.executeQuery("SELECT tl_name, sum(total_cost) FROM reservations INNER JOIN train_schedule_assignment ON reservations.schedule_num = train_schedule_assignment.schedule_num INNER JOIN transit_line ON train_schedule_assignment.tl_id = transit_line.tl_id group by tl_name ORDER BY sum(total_cost) DESC LIMIT 3");
 			    	while (rs.next()){
 			    		String table = "<tr><td>"+rs.getString("tl_name")+"</td><td>"+rs.getString("sum(total_cost)")+"</td></tr>";
 			    		out.println(table);
