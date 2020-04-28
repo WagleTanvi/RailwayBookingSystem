@@ -41,7 +41,7 @@
 		String state = rs.getString("state");
 		session.setAttribute("a_state", state);
 		String ssn = rs.getString("ssn");
-		session.setAttribute("a_ssn", ssn);
+		session.setAttribute("a_ssn", state);
 		
  	   db.closeConnection(con);
   	}
