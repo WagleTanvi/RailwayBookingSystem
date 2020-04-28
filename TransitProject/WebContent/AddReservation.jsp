@@ -106,12 +106,12 @@
 			String tLine = "";
 
 			while(r1.next()){
-				start = r1.getString("departure_time");
+				start = r1.getString("arrival_time");
 			}
 			ResultSet r2 = stmt.executeQuery(tsa);
 
 			while(r1.next()){
-				tLine = r2.getString("tl_id");
+				tLine = r2.getString("tl_name");
 			}
 
 			if(!(scheduleNums.contains(schedule_num)) && startTimes.contains(start)){
