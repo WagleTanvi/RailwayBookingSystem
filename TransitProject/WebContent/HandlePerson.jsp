@@ -47,7 +47,7 @@
 		int x = ps.executeUpdate();
 
 		if (x == 1) {
-			if(session.getAttribute("role") == NULL){
+			if(session.getAttribute("role") == null){
 				if (request.getParameter("role").equals("customer_service_rep")) {
 					session.setAttribute("role", "customer_service_rep");
 					response.sendRedirect("Home.jsp");
