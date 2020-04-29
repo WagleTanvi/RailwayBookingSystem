@@ -21,8 +21,9 @@ public class ResObj {
 	String discount;
 	String time;
 	String username;
-
-	public ResObj() {
+	
+	String someDummy;
+	public ResObj(){
 	}
 
 	public void setTransit(String t) {

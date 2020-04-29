@@ -1,3 +1,5 @@
+<!-- WRITTEN BY WAYNE TAM wjt42 CSS WRITTEN BY BONING DING bnd28 -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*" %>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -13,9 +15,10 @@
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement(); 
 		%>
-	</head>
-	
+		
 	<style>
+	
+		/* CODE STARTING HERE BY bnd28 */
 		body {
 			font-family: Arial, Helvetica, sans-serif;
 		}
@@ -42,20 +45,19 @@
 		.selection {
 			margin: auto;
 		    width: 50%;
-		    /* border: 3px solid green; */
 		    padding: 10px;
 		}
 		
 		.selection * {
 			margin-left: 10%;
 		}
+		
+		/* CODE ENDING HERE BY bnd28 */
 
 	
 	</style>
-	
+	</head>
 	<body>
-		&nbsp;
-		&nbsp;
 		<h1>Sales Reports</h1>
 		
 		<a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp"><button style="background-color: green; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>

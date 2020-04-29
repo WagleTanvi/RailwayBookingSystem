@@ -1,3 +1,5 @@
+<!-- WRITTEN BY ZAID MEER zsm7 CSS WRITTEN BY BONING DING bnd28 -->
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -9,21 +11,70 @@
 <head>
 <meta charset="UTF-8">
 <title>Table with database</title>
+
+<style>
+	/* CODE STARTING HERE BY bnd28 */
+	body {
+			font-family: Arial, Helvetica, sans-serif;
+	}
+	table, td, th {
+  			border: 1px solid black;
+	}
+		
+	table {
+		  border-collapse: collapse;
+		  margin-bottom: 2%;
+		  margin-top: 2%;
+		  width: 80%;
+   		  margin-left: 10%;
+	}
+		
+	th {
+		  text-align: left;
+	}
+		
+	h3, h1 {
+			text-align: center;
+	}
+	
+	.register {
+		margin-left: 20%;
+	}
+	
+	.userSelect {
+		float: right;
+    	margin-right: 15%;
+    	width: 30%;
+	}
+	
+	.userSelect form p {
+		float: left;
+    	margin-top: 0%;
+    	margin-right: 1%;
+	}
+	/* CODE ENDING HERE BY bnd28 */
+</style>
 </head>
 <body>
 <button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp">Home</a></button>
 <button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
 <h1 style="text-align:center"> Users </h1>
-<label for="Role">Role:</label>
+<a class="register" href ='formPage.jsp?command=register' class = "btn btn-warning">Register a User</a>
+<div class="userSelect">
 <form action = "People.jsp" method = "POST">
+
+<p><strong>Select User Role: </strong></p>
 <select name="role">
 		<option value="all" >All</option>
 		 <option value="customer" >Customer</option>
 		 <option value = "customer representative">Customer Representative</option>
 </select>
+
+
 <input type="submit" value="Submit"/>
 </form>
-<a href ='formPage.jsp?command=register' class = "btn btn-warning"> Add </a>
+</div>
+
 <table>
 	<tr>
 		<th> Username </th>
@@ -53,6 +104,11 @@
 		else{
 			s = request.getParameter("role");
 		}
+		
+		if(s == null) {
+			s = "all";
+		}
+		
 		if(s.equals("customer")){
 				session.setAttribute("filterRole", "customer");
 				rs = stmt.executeQuery("SELECT username, ssn, fname, lname, telephone, city, state, role, zipcode, email, role FROM users WHERE role = 'customer'");

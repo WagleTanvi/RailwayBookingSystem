@@ -1,4 +1,4 @@
-<!-- Written By: Vancha Verma vv199 -->
+<!-- Written By: Vancha Verma vv199 and BONING DING bnd28 -->
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     import="com.TransitProject.pkg.*"%>
@@ -14,7 +14,7 @@
 <body>
 
 <%
-	String username = (String) session.getAttribute("username");
+	String username = (String) session.getAttribute("user");
 	String sch_num = (String) session.getAttribute("schedule");
 	String date_ticket = (String) session.getAttribute("date"); //the day its reserved for
 	String or = (String) session.getAttribute("origin");
@@ -95,35 +95,53 @@
 			stmt.executeUpdate(insert);
 
 			int schedule_num = Integer.parseInt(sch_num);
-			ArrayList<String> transitLine = new ArrayList<String>();
-			ArrayList<Integer> scheduleNums = new ArrayList<Integer>();
-			ArrayList<String> startTimes = new ArrayList<String>();
-
-			String tst = "SELECT * from train_schedule_timings tst WHERE tst.schedule_num = '" + sch_num + "'";
-			String tsa = "SELECT * from train_schedule_assignment tsa WHERE tsa.schedule_num = '" + sch_num + "'";
-			ResultSet r1 = stmt.executeQuery(tst);
+			
+			
+			
+			
+			@SuppressWarnings("unchecked")
+			ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
+			@SuppressWarnings("unchecked")
+			ArrayList<Integer> scheduleNumsInit = (ArrayList<Integer>)session.getAttribute("scheduleNumsInit");
+			@SuppressWarnings("unchecked")
+			ArrayList<String> startTimesInit = (ArrayList<String>)session.getAttribute("startTimesInit");
+			
+			
+			//CODE STARTING HERE BY bnd28 AND vv199
+			String tst = "SELECT * from train_schedule_timings tst WHERE tst.schedule_num = " + sch_num + "ORDER BY arrival_time";
+			String tsa = "SELECT tl.tl_name from transit_line tl, train_schedule_assignment tsa where tsa.schedule_num = " + sch_num + " AND tsa.tl_id = tl.tl_id;";
+			
 			String start = "";
 			String tLine = "";
+			
+			if(!(scheduleNumsInit.contains(schedule_num)) && startTimesInit.contains(start)){
+				ResultSet r1 = stmt.executeQuery(tst);
+				ResultSet r2 = stmt.executeQuery(tsa);
+				String tl_name = "";
+				while(r2.next()){
+					tl_name = r2.getString("tl_name");
+				}
+				
+				while(r1.next()){
+					startTimesInit.add(r1.getString("arrival_time"));
+					scheduleNumsInit.add(schedule_num);
+					transitLinesInit.add(tl_name);
+				}
+				
+	
+				
 
-			while(r1.next()){
-				start = r1.getString("arrival_time");
+				transitLinesInit.add(tLine);
+				scheduleNumsInit.add(schedule_num);
+				startTimesInit.add(start);
+				
 			}
-			ResultSet r2 = stmt.executeQuery(tsa);
 
-			while(r1.next()){
-				tLine = r2.getString("tl_name");
-			}
-
-			if(!(scheduleNums.contains(schedule_num)) && startTimes.contains(start)){
-				transitLine.add(tLine);
-				scheduleNums.add(schedule_num);
-				startTimes.add(start);
-				session.setAttribute("transitLinesInit", transitLine);
-				session.setAttribute("scheduleNumsInit", scheduleNums);
-				session.setAttribute("startTimesInit", startTimes);
-
-			}
-
+			session.setAttribute("transitLinesInit", transitLinesInit);
+			session.setAttribute("scheduleNumsInit", scheduleNumsInit);
+			session.setAttribute("startTimesInit", startTimesInit);
+			
+			//CODE ENDING HERE BY bnd28 AND vv199
 
 			session.removeAttribute("username");
 			session.removeAttribute("schedule");

@@ -117,6 +117,9 @@
 					direction = "down";
 				}
 				session.setAttribute("direction", direction);
+				System.out.println(line);
+				System.out.println(origin);
+				System.out.println(destination);
 				System.out.println(start);
 				System.out.println(end);
 				System.out.println(direction);
