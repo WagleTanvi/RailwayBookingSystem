@@ -103,7 +103,7 @@
 			<% } else {%>
 	        <%if (session.getAttribute("b_sort").equals("fare")){ %> <option value="fare" selected>Fare</option> <% } else {%> <option value="fare">Fare</option> <%} %>
 	        <%if (session.getAttribute("b_sort").equals("tsm2.arrival_time")){ %> <option value="tsm2.arrival_time" selected>Arrival Time</option> <% } else {%> <option value="tsm2.arrival_time">Arrival Time</option>  <%} %>
-	        <%if (session.getAttribute("b_sort").equals("tsm1.departure_time")){ %> <option value="tsm1.departure_time" selected >Destination Time</option> <% } else {%>  <option value="tsm1.departure_time">Destination Time</option>  <%} %>
+	        <%if (session.getAttribute("b_sort").equals("tsm1.departure_time")){ %> <option value="tsm1.departure_time" selected >Departure Time</option> <% } else {%>  <option value="tsm1.departure_time">Departure Time</option>  <%} %>
 	        <%if (session.getAttribute("b_sort").equals("start")){ %> <option value="start" selected> Origin Station </option> <% } else {%> <option value="start"> Origin Station </option> <%} %>
 	        <%if (session.getAttribute("b_sort").equals("end")){ %><option value="end" selected>Destination Station</option> <% } else {%> <option value="end">Destination Station</option>  <%} %>
        		<% } %>

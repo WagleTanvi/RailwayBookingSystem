@@ -61,25 +61,25 @@
 		ApplicationDB db = new ApplicationDB();	
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
-		String statement = "SELECT tl.tl_name"
-				+ " from transit_line tl, transit_line_route r, station s"
-				+" where tl.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name= ?"
-				+" UNION"
-				+" SELECT tl.tl_name"
-				+" from transit_line tl, transit_line_route r, station s"
-				+" where tl.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name= ? ;";
+		String statement = "SELECT distinct tl1.tl_name from transit_line tl1, transit_line_route r, station s"
+				+" where tl1.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name= ?"
+			+" AND EXISTS ("
+			+" SELECT tl2.tl_name"
+			+" from transit_line tl2, transit_line_route r, station s"
+				+" where tl2.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name=? and tl2.tl_name=tl1.tl_name);";
 		PreparedStatement ps = con.prepareStatement(statement);
 		ps.setString(1,origin);
 		ps.setString(2,destination);
 	    ResultSet rs = ps.executeQuery();
-	    rs.next();
-	    String first = rs.getString("tl_name");
+	   /*  rs.next();
+	    String first = rs.getString("tl_name"); */
 	    /* rs.next();
 	    String second = rs.getString("tl_name"); */
-	    if (rs.next()){
+	    if (!rs.next()){
 	    	session.setAttribute("t_error", "No results found");
 	    }
 	    else {
+	    	String line = rs.getString("tl_name");
 	    	if (origin.equals(destination)){
 	    		statement = "Select t1.route_id, tl.tl_name, s1.name start, s2.name end, tsm1.departure_time departure, tsm2.arrival_time arrival, ABS(t2.hop_number - t1.hop_number + 1)*tl.fare cost, tsm1.schedule_num, SUBTIME(tsm2.arrival_time, tsm2.departure_time) travel_time from transit_line_route t1, transit_line_route t2, transit_line tl, station s1, station s2, train_schedule_timings tsm1, train_schedule_timings tsm2"
 	    				+" where  tl.tl_id = t1.tl_id and tl.tl_id = t2.tl_id and s1.station_id = t1.start_station_id and s2.station_id = t2.end_station_id and tsm1.route_id = t1.route_id and tsm2.route_id = t2.route_id and tsm1.schedule_num = tsm2.schedule_num and"
@@ -90,24 +90,26 @@
 			    rs = ps.executeQuery();
 	    	}
 	    	else {
-				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s where r.start_station_id = s.station_id and s.name = ?";
+				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s, transit_line tl where r.start_station_id = s.station_id and s.name = ? and tl.tl_name = ? and tl.tl_id = r.tl_id";
 				ps = con.prepareStatement(statement);
 				ps.setString(1,origin);
+				ps.setString(2,line);
 			    rs = ps.executeQuery();
 			    int start = -1;
 				if (rs.next()){
 					start = rs.getInt("min");
 				}
-				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s where r.end_station_id = s.station_id and s.name = ?";
+				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s, transit_line tl where r.end_station_id = s.station_id and s.name = ? and tl.tl_name = ? and tl.tl_id = r.tl_id";
 				ps = con.prepareStatement(statement);
 				ps.setString(1,destination);
+				ps.setString(2,line);
 			    rs = ps.executeQuery();
 			    int end = -1;
 				if (rs.next()){
 					end = rs.getInt("min");
 				}
 				String direction = "";
-				if (start < end){
+				if (start <= end){
 			
 					direction = "up";
 				}
@@ -115,6 +117,9 @@
 					direction = "down";
 				}
 				session.setAttribute("direction", direction);
+				System.out.println(start);
+				System.out.println(end);
+				System.out.println(direction);
 				//out.println(direction);
 				
 				/*statement = "SELECT min(r.hop_number) min from transit_line_route r, station s where r.end_station_id = s.station_id and s.name = ?";
@@ -123,15 +128,24 @@
 			    rs = ps.executeQuery();*/
 			    
 			    statement = 
-			    		"SELECT tl.tl_name, r.route_id, ts.schedule_num, t.train_id,  ? start, ? end, min(ts.departure_time) departure, max(ts.arrival_time) arrival, SUBTIME(max(ts.arrival_time), min(ts.departure_time)) travel_time, (tl.fare)*(max(r.hop_number) - min(r.hop_number)+1) cost"
+			    		"SELECT tl.tl_name, r.route_id, ts.schedule_num, t.train_id, ? start, ? end, min(ts.departure_time) departure, max(ts.arrival_time) arrival, SUBTIME(max(ts.arrival_time), min(ts.departure_time)) travel_time, (tl.fare)*(max(r.hop_number) - min(r.hop_number)+1) cost"
 			    		+" from transit_line_route r, station s1, station s2, train_schedule_timings ts, transit_line tl, train_schedule_assignment ta, train t"
 			    		+" where r.start_station_id = s1.station_id and r.end_station_id = s2.station_id and"
 			    		      +" ts.route_id = r.route_id and r.tl_id = tl.tl_id and"
 			    		      +" ta.schedule_num = ts.schedule_num and ta.train_id = t.train_id and"
-			    			  + " (s1.name = ? or s2.name = ?)"
-			    		       +" and direction = ?"
-			    		        + " and t.number_of_seats > ( Select count(*) from reservations rr where ta.schedule_num = rr.schedule_num)"
-			    		+" group by ts.schedule_num;";
+			    				+" (s1.name = ? or s2.name = ?)"
+			    		        +" and direction = ?"
+			    		        +" and t.number_of_seats > ( Select count(*) from reservations rr where ta.schedule_num = rr.schedule_num)"
+			    		        +" and tl.tl_name in ("
+			    					+" SELECT distinct tl1.tl_name"
+			    					+" from transit_line tl1, transit_line_route r, station s"
+			    						+ " where tl1.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name=?"
+			    					+" AND EXISTS ("
+			    					+ " SELECT tl2.tl_name"
+			    					+ " from transit_line tl2, transit_line_route r, station s"
+			    						+" where tl2.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name=? and tl2.tl_name=tl1.tl_name)"
+			    		        + " )"
+			    		+"group by ts.schedule_num;";
 			    		 
 			    ps = con.prepareStatement(statement);		 
 			    ps.setString(1,origin);
@@ -139,6 +153,8 @@
 			    ps.setString(3,origin);
 			    ps.setString(4,destination);
 			    ps.setString(5,direction);
+			    ps.setString(6,origin);
+			    ps.setString(7,destination);
 			    rs = ps.executeQuery();
 	    	}
 			ArrayList<TrainScheduleObject> list = new ArrayList<TrainScheduleObject>();

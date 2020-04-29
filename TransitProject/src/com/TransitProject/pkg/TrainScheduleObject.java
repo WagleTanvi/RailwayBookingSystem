@@ -48,7 +48,7 @@ public class TrainScheduleObject {
 //		if (personType.contentEquals("customer")) {
 			html += "<td style=\"border: 1px solid black;\"><a href='?fare="+cost+"&schedule="+scheduleNum+"#popup1'><button> Reserve </button></a>" + "</td>";
 //		}	
-		System.out.println(html);
+		//System.out.println(html);
 		return html;
 	}
 	public String getBrowseData() {
@@ -59,7 +59,7 @@ public class TrainScheduleObject {
 				"<td style=\"border: 1px solid black;\">" + departure + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + arrival + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + "$"+ cost + "</td>";	
-		System.out.println(html);
+		//System.out.println(html);
 		return html;
 	}
 	public String getAddData() {
@@ -72,7 +72,7 @@ public class TrainScheduleObject {
 		String html = "<td style=\"border: 1px solid black;\">" + trainId + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + start + "</td>"+
 				"<td style=\"border: 1px solid black;\"><input type='time' value='"+departure+"' id='time_"+trainId+"' name='time_"+trainId+"'></td>";
-		System.out.println(html);
+		//System.out.println(html);
 		return html;
 	}
 	public int getTrainId() {
