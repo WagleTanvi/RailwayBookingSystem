@@ -47,16 +47,18 @@
 		int x = ps.executeUpdate();
 
 		if (x == 1) {
-
-			if (request.getParameter("role").equals("customer_service_rep")) {
-		session.setAttribute("role", "customer_service_rep");
-		response.sendRedirect("Home.jsp");
-			} else if (request.getParameter("role").equals("customer")) {
-		session.setAttribute("role", "customer");
-		response.sendRedirect("Home.jsp");
-			} else if (session.getAttribute("role").equals("administrator")) {
-		session.setAttribute("filterRole", "all");
-		response.sendRedirect("People.jsp");
+			if(session.getAttribute("role") == NULL){
+				if (request.getParameter("role").equals("customer_service_rep")) {
+					session.setAttribute("role", "customer_service_rep");
+					response.sendRedirect("Home.jsp");
+			     } 	else if (request.getParameter("role").equals("customer")) {
+					session.setAttribute("role", "customer");
+					response.sendRedirect("Home.jsp");
+			     }
+			}
+			else if (session.getAttribute("role").equals("administrator")) {
+				session.setAttribute("filterRole", "all");
+				 response.sendRedirect("People.jsp");
 			}
 
 			//CODE STARTING HERE BY bnd28
