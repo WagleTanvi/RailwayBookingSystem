@@ -15,8 +15,7 @@
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement(); 
 		%>
-	</head>
-	
+		
 	<style>
 	
 		/* CODE STARTING HERE BY bnd28 */
@@ -46,7 +45,6 @@
 		.selection {
 			margin: auto;
 		    width: 50%;
-		    /* border: 3px solid green; */
 		    padding: 10px;
 		}
 		
@@ -58,10 +56,8 @@
 
 	
 	</style>
-	
+	</head>
 	<body>
-		&nbsp;
-		&nbsp;
 		<h1>Sales Reports</h1>
 		
 		<a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp"><button style="background-color: green; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>
