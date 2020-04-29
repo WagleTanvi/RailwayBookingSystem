@@ -60,7 +60,7 @@
 			//System.out.println("Username: " + session.getAttribute("schedule"));
 
 
-				if(session.getAttribute("username") != null){
+				if(session.getAttribute("schedule") != null){
 					out.print("here");
 					rid = request.getParameter("v_rid");
 					//System.out.print("\n SUBMIT \n ");

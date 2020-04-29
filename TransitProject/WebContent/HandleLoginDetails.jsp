@@ -1,4 +1,4 @@
-<!-- Written By: Tanvi Wagle tnw39 -->
+<!-- Written By: Tanvi Wagle tnw39 and Boning Ding bnd28 -->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" import="com.TransitProject.pkg.*" %>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
@@ -35,7 +35,7 @@
      			}
      			else if (session.getAttribute("type").equals("login")){
      				
-     				//bnd28 work starting here
+     				//CODE STARTING HERE FOR bnd28
      				//should only be getting one user after this query - written by bnd28
      				ResultSet rs = stmt.executeQuery("select * from users where username='" + username + "' and password='" + password + "'");
 
@@ -73,7 +73,7 @@
      			        
      			        response.sendRedirect("Home.jsp");
      			        
-     			        //bnd28 work ending here
+     			        //CODE ENDING HERE FOR bnd28
      			    } else {
      			        out.println("<h1> Oops! Invalid username or password. </h1> <br> <a href='index.jsp'>Click here to try again</a>");
      			    }
