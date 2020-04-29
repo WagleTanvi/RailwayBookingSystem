@@ -45,6 +45,7 @@
     	    	
     	    	if (x == 1){
     	    		if(session.getAttribute("role").equals("administrator")){
+				session.setAttribute("filterRole", "all");
     	    			response.sendRedirect("People.jsp");
     	    		}
     	    		else if(request.getParameter("role").equals("customer_service_rep")){
