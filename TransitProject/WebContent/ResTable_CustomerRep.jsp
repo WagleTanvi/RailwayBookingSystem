@@ -13,9 +13,13 @@
 </head>
 <body>
 <h1 style="text-align:center; top:50px;"> User Reservations</h1>
-<%		try{
+<%		
 
+	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+		response.sendRedirect("index.jsp"); 
+	}
 
+		try{
 
 			//connect to database
 			//out.println("here");
@@ -48,6 +52,7 @@
 
 			<INPUT TYPE="submit" VALUE="Filter"/>
 			</form>
+			<p></p>
 			<%
 			db.closeConnection(con);
 		} catch (Exception e) {

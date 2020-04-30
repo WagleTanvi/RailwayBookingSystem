@@ -18,15 +18,18 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Reservation Page</title>
+	<title>Reservations</title>
 </head>
 
 <body>
-<a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp"><button style="background-color: green; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>
-<a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp"><button style="background-color: red; position:absolute; top:2%; right: 4%; border-radius: 10px;">Logout</button></a>
-
-
+<a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp"><button style="background-color: green; font-size: 20px; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>
+<a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp"><button style="background-color: red; font-size: 20px; position:absolute; top:2%; right: 4%; border-radius: 10px;">Logout</button></a>
 	<%
+	
+	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+		response.sendRedirect("index.jsp"); 
+	}
+	
 	String role = (String)session.getAttribute("role");
 	String rid = "";
 
@@ -74,10 +77,7 @@
 				out.print(e);
 			}
 
-	if(session.getAttribute("user") == null) {
-		response.sendRedirect("index.jsp");
-
-	} else if ((role.equals("customer"))) {
+	if ((role.equals("customer"))) {
 		%>
 		<div style="align:center; text-align:center; " >
 		<jsp:include page="ResTable_Customer.jsp"/>
@@ -102,9 +102,11 @@
 	</div>
 
 	<div style = "text-align: center; padding-top:30px;">
-		<button>
-			<a style="color: black; font-size: 20px;"href="TrainSchedule.jsp">Make Another Reservation</a>
-		</button>
+		<a style="color: black; font-size: 20px; "href="TrainSchedule.jsp">
+		<button style = "font-size: 20px;"> Make Another Reservation </button>
+		</a>
+		
+		<p></p> <p></p> <p></p> <p></p>
 	</div>
 
 </body>

@@ -11,9 +11,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-<% out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
+<% 
+		if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+			response.sendRedirect("index.jsp"); 
+		}
+		out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
 
-<table id = "resvationTable" align = "center" style="width:90%">
+		<table id = "resvationTable" align = "center" style="width:90%">
 
   	<tr>
     	<th>Transit Line</th>

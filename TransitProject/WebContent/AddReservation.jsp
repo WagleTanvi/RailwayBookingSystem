@@ -14,7 +14,15 @@
 <body>
 
 <%
-	String username = (String) session.getAttribute("user");
+	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+		response.sendRedirect("index.jsp"); 
+	}
+
+	String username = (String) session.getAttribute("username");
+	if(((String)session.getAttribute("role")).equals("customer")){
+		username = (String) session.getAttribute("user");
+	}
+	
 	String sch_num = (String) session.getAttribute("schedule");
 	String date_ticket = (String) session.getAttribute("date"); //the day its reserved for
 	String or = (String) session.getAttribute("origin");
@@ -37,7 +45,7 @@
 		    Date dateobj = new Date();
 		    System.out.println(df.format(dateobj));
 
-			int total_cost = 0;
+			//double total_cost = 0;
 			int fare = Integer.parseInt(f);
 			int origin = 0;
 			int destination = 0;
@@ -56,7 +64,7 @@
 				}
 			}
 
-			out.print("here");
+			//out.print("here");
 
 			if(trip.equals("Round")){
 				fare = fare *2;
@@ -74,13 +82,14 @@
 				fare = fare + 5;
 			}
 
-			total_cost = fare * (destination - origin);
-			total_cost += 3.5;
+			double totalFare = fare * Math.abs((destination - origin));
+			System.out.println(totalFare);
+			totalFare += 3.5;
 
 			String insert = "INSERT INTO reservations "
 					+ "(username, total_cost, origin, destination, schedule_num, class, date_ticket, date_reserved, booking_fee, discount, trip)"
 					+ " VALUES ( '" + username + "' , "
-					+ total_cost + ", "
+					+ totalFare + ", "
 					+ origin + " , "
 					+ destination + " , "
 					+ sch_num + " , '"
@@ -91,14 +100,11 @@
 					+ discount + "', '"
 					+ trip + "');";
 
-			System.out.println(insert);
+			//System.out.println(insert);
 			stmt.executeUpdate(insert);
-
+			
+			//CODE STARTING HERE BY bnd28 AND vv199
 			int schedule_num = Integer.parseInt(sch_num);
-			
-			
-			
-			
 			@SuppressWarnings("unchecked")
 			ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
 			@SuppressWarnings("unchecked")
@@ -106,8 +112,6 @@
 			@SuppressWarnings("unchecked")
 			ArrayList<String> startTimesInit = (ArrayList<String>)session.getAttribute("startTimesInit");
 			
-			
-			//CODE STARTING HERE BY bnd28 AND vv199
 			String tst = "SELECT * from train_schedule_timings tst WHERE tst.schedule_num = " + sch_num + "ORDER BY arrival_time";
 			String tsa = "SELECT tl.tl_name from transit_line tl, train_schedule_assignment tsa where tsa.schedule_num = " + sch_num + " AND tsa.tl_id = tl.tl_id;";
 			
@@ -128,9 +132,6 @@
 					transitLinesInit.add(tl_name);
 				}
 				
-	
-				
-
 				transitLinesInit.add(tLine);
 				scheduleNumsInit.add(schedule_num);
 				startTimesInit.add(start);

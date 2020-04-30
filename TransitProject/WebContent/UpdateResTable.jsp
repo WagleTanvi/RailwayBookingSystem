@@ -12,32 +12,47 @@
 <body>
 <%
 try{
+	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+		response.sendRedirect("index.jsp"); 
+	}
 		//connect to database
 		ApplicationDB db = new ApplicationDB();
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
+		
+		//System.out.println("here");
 
 		String rid = request.getParameter("v_rid");
+		//System.out.println(rid);
 		String cla = request.getParameter("class");
+		//System.out.println(cla);
 		String trip = request.getParameter("trip");
+		//System.out.println(trip);
 		String disc = request.getParameter("discount");
+		//System.out.println(disc);
+		String org = request.getParameter("origin");
+		//System.out.println(org);
+		String dest = request.getParameter("dest");
+		//System.out.println(dest);
+		String schNum = request.getParameter("schNum");
+		//System.out.println(schNum);
+		
 		int fare = 0;
-		int origin = 0;
-		int dest = 0;
+		int origin = Integer.parseInt(org);
+		int des = Integer.parseInt(dest);
 
-		//System.out.println(cla + " " + trip + " " + dis);
+		//System.out.println(cla + " " + trip + " " + des);
 
-		String getFare = "SELECT tl.tl_id, tl.fare, r.origin, r.destination"
-				+ " FROM transit_line tl, reservations r, train_schedule_assignment tsa"
-				+ " WHERE r.schedule_num = tsa.schedule_num AND tl.tl_id = tsa.tl_id AND r.rid = " + rid;
+		String getFare = "SELECT tl.tl_id, tl.fare"
+				+ " FROM transit_line tl, train_schedule_assignment tsa"
+				+ " WHERE tsa.schedule_num = '" + schNum + "' AND tl.tl_id = tsa.tl_id ";
+		
+		System.out.println(getFare); 
 
 		ResultSet result = stmt.executeQuery(getFare);
 
 		while(result.next()){
 			fare = result.getInt("tl.fare");
-			origin = result.getInt("r.origin");
-			dest = result.getInt("r.destination");
-
 		}
 
 		if(trip.equals("Round")){
@@ -56,18 +71,22 @@ try{
 			fare = fare + 5;
 		}
 
-		int totalFare = fare * (dest - origin);
+		double totalFare = fare * Math.abs((des - origin));
+		System.out.println(totalFare);
 		totalFare += 3.5;
 
-
-		//System.out.println(cla + " " + trip + " " + disc + " " + totalFare);
-
 		String update = "UPDATE reservations"
-				+ " SET class = '" + cla + "' , discount = '" + disc + "' , trip = '" + trip + "' , total_cost = " + fare
+				+ " SET class = '" + cla 
+				+ "' , discount = '" + disc 
+				+ "' , destination = '" + dest
+				+ "' , origin = '" + origin
+				+ "' , schedule_num = '" + schNum
+				+ "' , trip = '" + trip
+				+ "' , total_cost = " + totalFare
 				+ " WHERE rid = " + rid;
 
 
-		//System.out.println(update);
+		System.out.println(update);
 		stmt.executeUpdate(update);
 
 		db.closeConnection(con);

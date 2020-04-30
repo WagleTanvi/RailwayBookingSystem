@@ -9,11 +9,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Reservations </title>
+<title> Reservations </title>
 </head>
 <body>
 <h1 style="text-align:center; top:50px;"> User Reservations</h1>
 <%		try{
+			
+	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+		response.sendRedirect("index.jsp"); 
+	}
 
 			//connect to database
 			ApplicationDB db = new ApplicationDB();
@@ -76,6 +80,8 @@
 
 			<INPUT TYPE="submit" VALUE="Filter"/>
 			</form>
+			
+			<p></p>
 			<%
 
 			db.closeConnection(con);
@@ -137,7 +143,7 @@
 
 			str = str + " ORDER BY r.username, tsa.train_id;";
 
-			System.out.println(str);
+			//System.out.println(str);
 
 			//to hold all the information from the database
 			ArrayList<ResObj> customerTable = new ArrayList<ResObj>();
