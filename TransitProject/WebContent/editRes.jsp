@@ -22,15 +22,15 @@
 		String rid = request.getParameter("v_val");
 		String change = "";
 		//session.setAttribute("changed", change);
-		
+
 		//String rid = request.getParameter("val");
 		try{
 		//connect to database
 		ApplicationDB db = new ApplicationDB();
 		Connection con = db.getConnection();
 		Statement stmt = con.createStatement();
-		String og = "SELECT tsa.tl_id, r.* from reservations r, train_schedule_assignment tsa WHERE r.rid = '" + rid + "' AND r.schedule_num = tsa.schedule_num";
-		System.out.println(og); 
+		String og = "SELECT tsa.tl_id, r.* from reservations r, train_schedule_assignment tsa WHERE r.rid = " + rid + " AND r.schedule_num = tsa.schedule_num";
+		System.out.println(og);
 		//Run the query against the database.
 		ResultSet result = stmt.executeQuery(og);
 
@@ -60,62 +60,72 @@
 		String time = "select tst.arrival_time, tst.schedule_num"
 				+ " from train_schedule_timings tst, train_schedule_assignment tsa"
 				+ " where tst.schedule_num = tsa.schedule_num AND tsa.tl_id = '" + entry.getTransit() + "';";
-				
-		//System.out.print(time); 
-					
-		result = stmt.executeQuery(time); 
-		ArrayList<String> times = new ArrayList<String>(); 
-		ArrayList<String> schNum = new ArrayList<String>(); 
+
+		//System.out.print(time);
+
+		result = stmt.executeQuery(time);
+		ArrayList<String> times = new ArrayList<String>();
+		ArrayList<String> schNum = new ArrayList<String>();
 		while(result.next()){
-			times.add(result.getString("tst.arrival_time")); 
+			times.add(result.getString("tst.arrival_time"));
 			schNum.add(result.getString("tst.schedule_num"));
 		}
-		
-		String getSt = "SELECT s.name, s.station_id" 
-				+ " FROM station s where s.station_id >= " + entry.getOrigin() 
-				+ " AND s.station_id <= " + entry.getDest() + ";";  
-		result = stmt.executeQuery(getSt); 
-		ArrayList<String> st = new ArrayList<String>(); 
-		ArrayList<String> st_id = new ArrayList<String>(); 
-		
-		while(result.next()){
-			st.add(result.getString("s.name")); 
-			st_id.add(result.getString("s.station_id")); 
+		int o = Integer.parseInt(entry.getOrigin());
+		int d = Integer.parseInt(entry.getDest());
+		String getSt = " ";
+		if(o <= d){
+			getSt = "SELECT s.name, s.station_id"
+					+ " FROM station s where s.station_id >= " + entry.getOrigin()
+					+ " AND s.station_id <= " + entry.getDest() + ";";
+		} else {
+			getSt = "SELECT s.name, s.station_id"
+					+ " FROM station s where s.station_id >= " +  entry.getDest()
+					+ " AND s.station_id <= " + entry.getOrigin() + ";";
 		}
-		
+
+		System.out.println(getSt);
+		result = stmt.executeQuery(getSt);
+		ArrayList<String> st = new ArrayList<String>();
+		ArrayList<String> st_id = new ArrayList<String>();
+
+		while(result.next()){
+			st.add(result.getString("s.name"));
+			st_id.add(result.getString("s.station_id"));
+		}
+
 		%>
-		
+
 			<form action = "resPage.jsp?v_rid=<%=rid%>" method= "post">
-			
+
 			<p><b>Change Origin: </b>
 			<select id="origin" name="origin">
-			<% for(int i = 0; i < st.size(); i++){ 
+			<% for(int i = 0; i < st.size(); i++){
 				if(entry.getOrigin().equals(st_id.get(i))){ %>
   					<option id=<%=st_id.get(i)%> name="origin" value=<%=st_id.get(i)%> selected ><%out.print(st.get(i));%></option>
 				<% } else { %>
 					<option id=<%=st_id.get(i)%> name="origin" value=<%=st_id.get(i)%>><%out.print(st.get(i));%></option>
-				<%} 
+				<%}
 			}%>
 			</select>&nbsp;&nbsp;
-			
+
 			<b>Change Destination: </b>
 			<select id="dest" name="dest">
-			<% for(int i = 0; i < st.size(); i++){ 
+			<% for(int i = 0; i < st.size(); i++){
 				if(entry.getDest().equals(st_id.get(i))){ %>
   					<option id="<%=st_id.get(i)%>" name="dest" value=<%=st_id.get(i)%> selected ><%out.print(st.get(i));%></option>
 				<% } else { %>
 					<option id=<%=st_id.get(i)%> name="dest" value=<%=st_id.get(i)%>><%out.print(st.get(i));%></option>
-				<%} 
+				<%}
 			}%>
-			</select> 
-			
+			</select>
+
 			<p><b>Change Time: </b>
 			<select id="schNum" name="schNum">
 			<% for(int i = 0; i < times.size(); i++){ %>
   				<option id=<%=schNum.get(i)%> name="schNum" value=<%=schNum.get(i)%>><%out.print(times.get(i));%></option>
 			<% } %>
 			</select></p>
-		
+
 			<p><b>Change Ticket Type: </b></p>
 			<input type="radio" id="one" name="trip" value="One" checked/>
 			<label for="one">One-Way</label>
@@ -149,15 +159,15 @@
 			<button a style = "color: white; background-color: red;" name = "res_change" value = "delete">Delete Reservation</button>
 			</a></p>
 			</form>
-			
+
 			<%
 
 		db.closeConnection(con);
 	} catch (Exception e) {
 		out.print(e);
 	}
-	
-	
+
+
 	%>
 </div>
 </body>
