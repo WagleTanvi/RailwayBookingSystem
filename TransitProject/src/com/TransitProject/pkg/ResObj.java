@@ -21,7 +21,7 @@ public class ResObj {
 	String discount;
 	String time;
 	String username;
-	
+
 	String someDummy;
 	public ResObj(){
 	}
