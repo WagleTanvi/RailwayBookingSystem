@@ -191,11 +191,17 @@
 				//out.print("\t"+rs.getString("travel time"));
 				out.println(rs.getInt("cost"));  */
 			}
-			session.setAttribute("data", list);
+			if (list.size() == 0){
+				session.setAttribute("t_error", "No results found");
+			}
+			else{
+				session.setAttribute("data", list);
+			}
 	    }
 			session.setAttribute("origin", origin);
 			session.setAttribute("destination", destination);
 			session.setAttribute("date", date);
+			db.closeConnection(con);
         }
 			response.sendRedirect("TrainSchedule.jsp");  
 	}

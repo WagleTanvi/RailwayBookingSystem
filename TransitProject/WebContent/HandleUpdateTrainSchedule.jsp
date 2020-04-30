@@ -126,6 +126,7 @@
 			} // end of success
 			response.sendRedirect("updateTrainSchedule.jsp");   
 		} // end of else
+		db.closeConnection(con);
 	}
 	%>
 </body>

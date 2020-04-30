@@ -65,7 +65,7 @@
 			lines.add(rs.getString("tl_name"));
 		}
 		
-
+		db.closeConnection(con);
 	%>
 	<button style="background-color: green; position:absolute; top:20px; left: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="HandleBrowse.jsp?clear=true">Home</a></button>
 	<button style="background-color: red; position:absolute; top:20px; right: 30px; border-radius: 10px;"><a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp">Logout</a></button>
