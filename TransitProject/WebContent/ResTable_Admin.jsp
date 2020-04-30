@@ -13,7 +13,7 @@
 </head>
 <body>
 <h1 style="text-align:center; top:50px;"> User Reservations</h1>
-<p> Please note that the 'Date Reserved' for Monthly and Weekly tickets refer to date the pass becomes active </p>
+<p> Please note that the 'Date Reserved' for Monthly and Weekly tickets refers to date the pass becomes active </p>
 
 <%
 

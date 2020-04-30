@@ -301,7 +301,7 @@
 		@SuppressWarnings("unchecked")
 		ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
 		
-		
+		System.out.println("\n\nTRANSIT LINES SIZE: " + transitLinesInit.size());
 		if(transitLinesInit.size() > 0) {
 			out.println("<div class='alert'>");
 			@SuppressWarnings("unchecked")
