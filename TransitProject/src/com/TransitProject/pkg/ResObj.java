@@ -71,8 +71,11 @@ public class ResObj {
 		return rid;
 	}
 
-	public String getTransit() {
-		return trainsit; 
+	public String getTrip() {
+		return trip;
+	}
+	public String getDisc() {
+		return discount;
 	}
 
 	public String getOrigin() {
@@ -85,6 +88,10 @@ public class ResObj {
 
 	public String getClas() {
 		return cla;
+	}
+
+	public String getTransit() {
+		return transit;
 	}
 
 	public String printTable() {

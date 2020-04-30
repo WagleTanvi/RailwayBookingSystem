@@ -25,11 +25,11 @@
 <a style="color: black; text-decoration: none; font-size: 20px;"href="Home.jsp"><button style="background-color: green; font-size: 20px; position:absolute; top:2%; left: 4%; border-radius: 10px;">Home</button></a>
 <a style="color: black; text-decoration: none; font-size: 20px;"href="logout.jsp"><button style="background-color: red; font-size: 20px; position:absolute; top:2%; right: 4%; border-radius: 10px;">Logout</button></a>
 	<%
-	
+
 	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
-		response.sendRedirect("index.jsp"); 
+		response.sendRedirect("index.jsp");
 	}
-	
+
 	String role = (String)session.getAttribute("role");
 	String rid = "";
 
@@ -40,7 +40,7 @@
 			Statement stmt = con.createStatement();
 
 			if(request.getParameter("res_change") != null){
-				System.out.println("RES CHANGE");
+				//System.out.println("RES CHANGE");
 
 
 				if((request.getParameter("res_change")).equals("delete") && (request.getParameter("v_rid") != null)){
@@ -55,7 +55,7 @@
 					<%
 					//stmt.executeUpdate(remove);
 
-					System.out.println("Updated " + rid);
+					//System.out.println("Updated " + rid);
 
 				}
 			}
@@ -64,7 +64,7 @@
 
 
 				if(session.getAttribute("schedule") != null){
-					out.print("here");
+					//out.print("here");
 					rid = request.getParameter("v_rid");
 					//System.out.print("\n SUBMIT \n ");
 
@@ -105,7 +105,7 @@
 		<a style="color: black; font-size: 20px; "href="TrainSchedule.jsp">
 		<button style = "font-size: 20px;"> Make Another Reservation </button>
 		</a>
-		
+
 		<p></p> <p></p> <p></p> <p></p>
 	</div>
 

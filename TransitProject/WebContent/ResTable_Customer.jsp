@@ -11,11 +11,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-<% 
+<%
 		if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
-			response.sendRedirect("index.jsp"); 
+			response.sendRedirect("index.jsp");
 		}
 		out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
+          <p> Please not that the 'Date Reserved' for Monthly and Weekly tickets refer to date the pass becomes active </p>
+
 
 		<table id = "resvationTable" align = "center" style="width:90%">
 

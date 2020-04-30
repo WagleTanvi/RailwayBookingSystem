@@ -127,6 +127,7 @@
 			</select></p>
 
 			<p><b>Change Ticket Type: </b></p>
+			<%if(entry.getTrip().equals("One-Way")){ %>
 			<input type="radio" id="one" name="trip" value="One" checked/>
 			<label for="one">One-Way</label>
 			<input type="radio" id="two" name="trip" value="Round">
@@ -136,21 +137,93 @@
 			<input type="radio" id="monthly" name="trip" value="Monthly">
 			<label for="monthly">Monthly</label>
 
+			<% }  else if(entry.getTrip().equals("Round")) { %>
+			<input type="radio" id="one" name="trip" value="One"/>
+			<label for="one">One-Way</label>
+			<input type="radio" id="two" name="trip" value="Round" checked/>
+			<label for="two">Round-Trip</label>
+			<input type="radio" id="weekly" name="trip" value="Weekly">
+			<label for="weekly">Weekly</label>
+			<input type="radio" id="monthly" name="trip" value="Monthly">
+			<label for="monthly">Monthly</label>
+
+			<% }  else if(entry.getTrip().equals("Weekly")) { %>
+			<input type="radio" id="one" name="trip" value="One">
+			<label for="one">One-Way</label>
+			<input type="radio" id="two" name="trip" value="Round">
+			<label for="two">Round-Trip</label>
+			<input type="radio" id="weekly" name="trip" value="Weekly"  checked/>
+			<label for="weekly">Weekly</label>
+			<input type="radio" id="monthly" name="trip" value="Monthly">
+			<label for="monthly">Monthly</label>
+
+			<% }  else if(entry.getTrip().equals("Monthly")) { %>
+			<input type="radio" id="one" name="trip" value="One">
+			<label for="one">One-Way</label>
+			<input type="radio" id="two" name="trip" value="Round">
+			<label for="two">Round-Trip</label>
+			<input type="radio" id="weekly" name="trip" value="Weekly">
+			<label for="weekly">Weekly</label>
+			<input type="radio" id="monthly" name="trip" value="Monthly" checked/>
+			<label for="monthly">Monthly</label>
+			<% } %>
+
+
+
 			<p><b>Change Discount:</b></p>
+			<%if(entry.getDisc().equals("None")){ %>
 			<input type="radio" id="normal" name="discount" value="Normal" checked>
-			<label for="discount">Normal</label>
+			<label for="discount">None</label>
 			<input type="radio" id="senior/child" name="discount" value="Senior/Child">
 			<label for="senior">Senior/Child</label>
 			<input type="radio" id="disabled" name="discount" value="Disabled">
 			<label for="disabled">Disabled</label><br>
 
+			<% }else if(entry.getDisc().equals("Senior/Child")){ %>
+			<input type="radio" id="normal" name="discount" value="Normal">
+			<label for="discount">None</label>
+			<input type="radio" id="senior/child" name="discount" value="Senior/Child" checked>
+			<label for="senior">Senior/Child</label>
+			<input type="radio" id="disabled" name="discount" value="Disabled">
+			<label for="disabled">Disabled</label><br>
+
+			<% }else if(entry.getDisc().equals("Disabled")){ %>
+			<input type="radio" id="normal" name="discount" value="Normal">
+			<label for="discount">None</label>
+			<input type="radio" id="senior/child" name="discount" value="Senior/Child" >
+			<label for="senior">Senior/Child</label>
+			<input type="radio" id="disabled" name="discount" value="Disabled" checked>
+			<label for="disabled">Disabled</label><br>
+
+			<% } %>
+
 			<p><b>Change Class:</b></p>
+			<%if(entry.getClas().equals("Business")){ %>
+			<input type="radio" id="Economy" name="class" value="Economy">
+			<label for="Economy">Economy</label><br><br>
 			<input type="radio" id="Business" name="class" value="Business" checked>
 			<label for="business">Business</label>
 			<input type="radio" id="First" name="class" value="First">
 			<label for="First">First</label>
+
+			<% }else if(entry.getClas().equals("First")){ %>
 			<input type="radio" id="Economy" name="class" value="Economy">
 			<label for="Economy">Economy</label><br><br>
+			<input type="radio" id="Business" name="class" value="Business">
+			<label for="business">Business</label>
+			<input type="radio" id="First" name="class" value="First" checked>
+			<label for="First">First</label>
+
+			<% }else if(entry.getClas().equals("Economy")){ %>
+			<input type="radio" id="Economy" name="class" value="Economy" checked >
+			<label for="Economy">Economy</label><br><br>
+			<input type="radio" id="Business" name="class" value="Business">
+			<label for="business">Business</label>
+			<input type="radio" id="First" name="class" value="First">
+			<label for="First">First</label>
+
+			<% } %>
+
 			<input type="submit" name = "res_change" value = "Update">
 
 			<a style="color: black; text-decoration: none;" href="resPage.jsp?v_val=cancel?">

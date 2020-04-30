@@ -13,11 +13,17 @@
 </head>
 <body>
 <h1 style="text-align:center; top:50px;"> User Reservations</h1>
-<%		try{
-			
-	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
-		response.sendRedirect("index.jsp"); 
-	}
+<p> Please not that the 'Date Reserved' for Monthly and Weekly tickets refer to date the pass becomes active </p>
+
+<%
+
+if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+	response.sendRedirect("index.jsp");
+}
+
+		try{
+
+
 
 			//connect to database
 			ApplicationDB db = new ApplicationDB();
@@ -80,7 +86,7 @@
 
 			<INPUT TYPE="submit" VALUE="Filter"/>
 			</form>
-			
+
 			<p></p>
 			<%
 
