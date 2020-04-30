@@ -75,8 +75,8 @@
 	 		rs.next();
 	 		list.add(new TrainScheduleObject("",0,list.get(list.size()-1).getTrainId()+1, "", "",rs.getString("name") ,"", "", 0));
 		    session.setAttribute("add", list);
-		    session.setAttribute("add_train", request.getParameter("train"));
-		    session.setAttribute("add_line", request.getParameter("line"));
+		    session.setAttribute("add_train", request.getParameter("train").replace("+", " "));
+		    session.setAttribute("add_line", request.getParameter("line").replace("+", " "));
 		    session.setAttribute("add_dir", request.getParameter("direction"));
 			response.sendRedirect("addTrainSchedule.jsp");  
 		}
@@ -176,6 +176,7 @@
 			session.setAttribute("add_msg", "Please input line, train_id and direction.");
 			response.sendRedirect("addTrainSchedule.jsp"); 
 		}
+		db.closeConnection(con);
 	}
 	%>
 </body>

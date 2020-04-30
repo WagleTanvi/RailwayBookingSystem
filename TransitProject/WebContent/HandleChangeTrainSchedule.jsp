@@ -58,6 +58,7 @@
 			session.setAttribute("change_msg", "Please input transit line.");
 	    	response.sendRedirect("changeScheduleNumPage.jsp");
 		}
+		db.closeConnection(con);
 	}
 	%>
 

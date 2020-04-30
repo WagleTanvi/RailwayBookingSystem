@@ -85,7 +85,7 @@ a {
 				out.println(t);
 			}
 		} */
-
+		db.closeConnection(con);
 /*
 		rs = stmt.executeQuery("SELECT distinct date from train_schedule;");
 		ArrayList<String> dates = new ArrayList<String> ();

@@ -58,7 +58,8 @@
 	session.setAttribute("b_line", line);
 	session.setAttribute("b_data", list);
 	session.setAttribute("b_sort", request.getParameter("sort"));
-	response.sendRedirect("BrowseTrainSchedule.jsp");  
+	response.sendRedirect("BrowseTrainSchedule.jsp"); 
+	db.closeConnection(con);
 	}
 	else if (request.getParameter("sort") == null || request.getParameter("b_line") == null){
 		session.setAttribute("b_msg", "Please choose a transit line and sort.");

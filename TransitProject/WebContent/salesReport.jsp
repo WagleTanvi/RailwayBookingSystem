@@ -173,6 +173,7 @@
 			    		out.println(table);
 			    	}
 		    	}
+		    	db.closeConnection(con);
 	    	}
 	    	%>
 		</table>
