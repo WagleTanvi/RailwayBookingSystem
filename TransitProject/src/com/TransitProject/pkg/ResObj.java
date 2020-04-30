@@ -71,6 +71,10 @@ public class ResObj {
 		return rid;
 	}
 
+	public String getTransit() {
+		return trainsit; 
+	}
+
 	public String getOrigin() {
 		return origin;
 	}
