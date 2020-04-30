@@ -173,6 +173,7 @@ a {
 		<% if (session.getAttribute("data") != null){ %>
 		<tr>
 			<th style="border: 1px solid black;"> Transit Line </th>
+			<th style="border: 1px solid black;"> Schedule Number </th>
 			<th style="border: 1px solid black;"> Departure Time </th>
 			<th style="border: 1px solid black;"> Arrival Time </th>
 			<th style="border: 1px solid black;"> Start Station </th>

@@ -37,8 +37,10 @@ public class TrainScheduleObject {
 		return transitLine + "\t" + trainId + "\t" + departure + "\t" + arrival + "\t" + start + "\t" + end + "\t" + travelTime;
 	}
 	public String getData(String personType) {
+		System.out.println("HEYYY");
 		String html = "<td style=\"border: 1px solid black;\">" 
 				+"<a href='stations.jsp?transit="+transitLine+"&num="+scheduleNum+"'>"+ transitLine + "</a></td>"+
+				"<td style=\"border: 1px solid black;\">#" + scheduleNum + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + departure + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + arrival + "</td>"+
 				"<td style=\"border: 1px solid black;\">" + start + "</td>"+
@@ -48,7 +50,7 @@ public class TrainScheduleObject {
 //		if (personType.contentEquals("customer")) {
 			html += "<td style=\"border: 1px solid black;\"><a href='?fare="+cost+"&schedule="+scheduleNum+"#popup1'><button> Reserve </button></a>" + "</td>";
 //		}	
-		//System.out.println(html);
+		System.out.println(html);
 		return html;
 	}
 	public String getBrowseData() {

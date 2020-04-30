@@ -90,38 +90,48 @@
 			    rs = ps.executeQuery();
 	    	}
 	    	else {
-				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s, transit_line tl where r.start_station_id = s.station_id and s.name = ? and tl.tl_name = ? and tl.tl_id = r.tl_id";
-				ps = con.prepareStatement(statement);
+	    		statement = "select * from transit_line tl, station s1, station s2 where tl.origin_station_id = s1.station_id  and tl.termin_station_id = s2.station_id and s2.name = ? and s1.name= ?;";
+	    		ps = con.prepareStatement(statement);
 				ps.setString(1,origin);
-				ps.setString(2,line);
+				ps.setString(2,destination);
 			    rs = ps.executeQuery();
-			    int start = -1;
-				if (rs.next()){
-					start = rs.getInt("min");
-				}
-				statement = "SELECT min(r.hop_number) min from transit_line_route r, station s, transit_line tl where r.end_station_id = s.station_id and s.name = ? and tl.tl_name = ? and tl.tl_id = r.tl_id";
-				ps = con.prepareStatement(statement);
-				ps.setString(1,destination);
-				ps.setString(2,line);
-			    rs = ps.executeQuery();
-			    int end = -1;
-				if (rs.next()){
-					end = rs.getInt("min");
-				}
 				String direction = "";
-				if (start <= end){
-			
-					direction = "up";
-				}
-				else {
+				if (rs.next()){
 					direction = "down";
+				}
+				else{
+					statement = "SELECT min(r.hop_number) min from transit_line_route r, station s, transit_line tl where r.start_station_id = s.station_id and s.name = ? and tl.tl_name = ? and tl.tl_id = r.tl_id";
+					ps = con.prepareStatement(statement);
+					ps.setString(1,origin);
+					ps.setString(2,line);
+				    rs = ps.executeQuery();
+				    int start = -1;
+					if (rs.next()){
+						start = rs.getInt("min");
+					}
+					statement = "SELECT min(r.hop_number) min from transit_line_route r, station s, transit_line tl where r.end_station_id = s.station_id and s.name = ? and tl.tl_name = ? and tl.tl_id = r.tl_id";
+					ps = con.prepareStatement(statement);
+					ps.setString(1,destination);
+					ps.setString(2,line);
+				    rs = ps.executeQuery();
+				    int end = -1;
+					if (rs.next()){
+						end = rs.getInt("min");
+					}
+					if (start <= end){
+				
+						direction = "up";
+					}
+					else {
+						direction = "down";
+					}
 				}
 				session.setAttribute("direction", direction);
 				System.out.println(line);
 				System.out.println(origin);
 				System.out.println(destination);
-				System.out.println(start);
-				System.out.println(end);
+				//System.out.println(start);
+				//System.out.println(end);
 				System.out.println(direction);
 				//out.println(direction);
 				
@@ -148,7 +158,7 @@
 			    					+ " from transit_line tl2, transit_line_route r, station s"
 			    						+" where tl2.tl_id = r.tl_id and r.start_station_id = s.station_id and s.name=? and tl2.tl_name=tl1.tl_name)"
 			    		        + " )"
-			    		+"group by ts.schedule_num;";
+			    		+"group by ts.schedule_num order by ts.departure_time;";
 			    		 
 			    ps = con.prepareStatement(statement);		 
 			    ps.setString(1,origin);
