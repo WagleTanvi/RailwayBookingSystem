@@ -60,10 +60,10 @@
 				}
 			}
 
-			System.out.println("Add res: " + session.getAttribute("schedule"));
+		//System.out.println("Add res: " + session.getAttribute("schedule"));
 
 
-				if(session.getAttribute("schedule") != null){
+			if(session.getAttribute("schedule") != null){
 					//out.print("here");
 					rid = request.getParameter("v_rid");
 					//System.out.print("\n SUBMIT \n ");
@@ -77,7 +77,7 @@
 				out.print(e);
 			}
 
-		System.out.println(role + " " + (String)session.getAttribute("role"));
+		//System.out.println(role + " " + (String)session.getAttribute("role"));
 
 	if ((role.equals("customer"))) {
 		%>
