@@ -45,6 +45,8 @@
 			entry.setCost("$"+ result.getString("r.total_cost"));
 			if(result.getString("r.discount").equals("Normal")){
 				entry.setDisc("None");
+			} else {
+				entry.setDisc(result.getString("r.discount"));
 			}
 			if(result.getString("r.trip").equals("One")){
 				entry.setTrip("One-Way");
@@ -92,6 +94,8 @@
 			st.add(result.getString("s.name"));
 			st_id.add(result.getString("s.station_id"));
 		}
+
+		System.out.println(entry.getDisc());
 
 		%>
 
@@ -155,7 +159,7 @@
 			<input type="radio" id="weekly" name="trip" value="Weekly"  checked/>
 			<label for="weekly">Weekly</label>
 			<input type="radio" id="monthly" name="trip" value="Monthly">
-			<label for="monthly">Monthly</label>
+			<label for="monthly">Monthly</l.abel>
 
 			<% }  else if(entry.getTrip().equals("Monthly")) { %>
 			<input type="radio" id="one" name="trip" value="One">
