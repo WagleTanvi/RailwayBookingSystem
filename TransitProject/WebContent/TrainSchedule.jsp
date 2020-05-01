@@ -157,12 +157,12 @@ a {
 	<div style="display: flex; justify-content:center;" >
 	<br>
 	<br>
-<%-- 	<table>
+	<table>
 		<td><a href="resPage.jsp"><button> <% if (personType.equals("customer")){ out.println("See My Reservations");} else { out.println("See Customer Reservations");} %></button></a></td>
 		<% if (!personType.equals("customer")){ %>
 		<td> <button> <a href="HandleTrainSchedule.jsp?clear=manage">Manage Train Schedule </a></button></td>
 		<%} %>
-	</table> --%>
+	</table>
 	</div>
 	<div style="display: flex; justify-content:center;" >
 	<% if (session.getAttribute("t_error") != null){
