@@ -20,6 +20,7 @@ public class ResObj {
 	String trip;
 	String discount;
 	String time;
+	String dtime;
 	String username;
 
 	String someDummy;
@@ -59,9 +60,16 @@ public class ResObj {
 	public void setCost(String c) {
 		cost = c;
 	}
+
 	public void setTime(String t) {
 		time = t;
 	}
+
+	public void setDTime(String t) {
+		dtime = t;
+	}
+
+
 	public void setUser(String u) {
 		username = u;
 	}

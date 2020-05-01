@@ -40,7 +40,7 @@
 			Statement stmt = con.createStatement();
 
 			if(request.getParameter("res_change") != null){
-				//System.out.println("RES CHANGE");
+				System.out.println("RES CHANGE");
 
 
 				if((request.getParameter("res_change")).equals("delete") && (request.getParameter("v_rid") != null)){
@@ -60,7 +60,7 @@
 				}
 			}
 
-			//System.out.println("Username: " + session.getAttribute("schedule"));
+			System.out.println("Add res: " + session.getAttribute("schedule"));
 
 
 				if(session.getAttribute("schedule") != null){
@@ -77,6 +77,8 @@
 				out.print(e);
 			}
 
+		System.out.println(role + " " + (String)session.getAttribute("role"));
+
 	if ((role.equals("customer"))) {
 		%>
 		<div style="align:center; text-align:center; " >
@@ -84,6 +86,7 @@
 
 		<%
 	} else if ((role.equals("administrator"))) {
+
 		%>
 
 		<div style="align:center; text-align:center; " >

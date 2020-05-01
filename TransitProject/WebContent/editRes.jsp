@@ -35,6 +35,7 @@
 		ResultSet result = stmt.executeQuery(og);
 
 		ResObj entry = new ResObj();
+		String sch_num = "";
 
 		while(result.next()) {
 			entry.setRid(result.getString("r.rid"));
@@ -56,90 +57,121 @@
 
 			entry.setDest(result.getString("r.destination"));
 			entry.setOrigin(result.getString("r.origin"));
+			sch_num = result.getString("r.schedule_num");
 		}
 		//System.out.println(entry.getDest());
 		//System.out.println(entry.getOrigin());
-		String time = "select tst.arrival_time, tst.schedule_num"
-				+ " from train_schedule_timings tst, train_schedule_assignment tsa"
-				+ " where tst.schedule_num = tsa.schedule_num AND tsa.tl_id = '" + entry.getTransit() + "';";
 
-		//System.out.print(time);
+		String getSt = "SELECT distinct s.name, s.station_id"
+				+ " FROM transit_line_route tlr, station s"
+				+ " WHERE tlr.tl_id = '" + entry.getTransit() + "' AND tlr.start_station_id = s.station_id";
+		System.out.println(getSt);
+		result = stmt.executeQuery(getSt);
+		ArrayList<String> stOr = new ArrayList<String>();
+		ArrayList<String> st_idOr = new ArrayList<String>();
 
-		result = stmt.executeQuery(time);
-		ArrayList<String> times = new ArrayList<String>();
-		ArrayList<String> schNum = new ArrayList<String>();
 		while(result.next()){
-			times.add(result.getString("tst.arrival_time"));
-			schNum.add(result.getString("tst.schedule_num"));
+			stOr.add(result.getString("s.name"));
+			st_idOr.add(result.getString("s.station_id"));
 		}
-		int o = Integer.parseInt(entry.getOrigin());
-		int d = Integer.parseInt(entry.getDest());
-		String getSt = " ";
-		if(o <= d){
-			getSt = "SELECT s.name, s.station_id"
-					+ " FROM station s where s.station_id >= " + entry.getOrigin()
-					+ " AND s.station_id <= " + entry.getDest() + ";";
-		} else {
-			getSt = "SELECT s.name, s.station_id"
-					+ " FROM station s where s.station_id >= " +  entry.getDest()
-					+ " AND s.station_id <= " + entry.getOrigin() + ";";
-		}
+
+		getSt = "SELECT distinct s.name, s.station_id"
+				+ " FROM transit_line_route tlr, station s"
+				+ " WHERE tlr.tl_id = '" + entry.getTransit() + "' AND tlr.end_station_id = s.station_id";
 
 		System.out.println(getSt);
 		result = stmt.executeQuery(getSt);
-		ArrayList<String> st = new ArrayList<String>();
-		ArrayList<String> st_id = new ArrayList<String>();
+		ArrayList<String> stDes = new ArrayList<String>();
+		ArrayList<String> st_idDes = new ArrayList<String>();
 
 		while(result.next()){
-			st.add(result.getString("s.name"));
-			st_id.add(result.getString("s.station_id"));
+			stDes.add(result.getString("s.name"));
+			st_idDes.add(result.getString("s.station_id"));
 		}
-
-		System.out.println(entry.getDisc());
+		//System.out.println(entry.getDisc());
 
 		%>
 
-			<form action = "resPage.jsp?v_rid=<%=rid%>" method= "post">
-
+			<form action = "editRes.jsp?v_val=<%=entry.getRid()%>" method= "post">
 			<p><b>Change Origin: </b>
 			<select id="origin" name="origin">
-			<% for(int i = 0; i < st.size(); i++){
-				if(entry.getOrigin().equals(st_id.get(i))){ %>
-  					<option id=<%=st_id.get(i)%> name="origin" value=<%=st_id.get(i)%> selected ><%out.print(st.get(i));%></option>
+			<% for(int i = 0; i < stOr.size(); i++){
+				if(entry.getOrigin().equals(st_idOr.get(i))){ %>
+  					<option id=<%=st_idOr.get(i)%> name="origin" value=<%=st_idOr.get(i)%> selected ><%out.print(stOr.get(i));%></option>
 				<% } else { %>
-					<option id=<%=st_id.get(i)%> name="origin" value=<%=st_id.get(i)%>><%out.print(st.get(i));%></option>
+					<option id=<%=st_idOr.get(i)%> name="origin" value=<%=st_idOr.get(i)%>><%out.print(stOr.get(i));%></option>
 				<%}
 			}%>
-			</select>&nbsp;&nbsp;
+			</select> &nbsp;&nbsp;
 
 			<b>Change Destination: </b>
 			<select id="dest" name="dest">
-			<% for(int i = 0; i < st.size(); i++){
-				if(entry.getDest().equals(st_id.get(i))){ %>
-  					<option id="<%=st_id.get(i)%>" name="dest" value=<%=st_id.get(i)%> selected ><%out.print(st.get(i));%></option>
+			<% for(int i = 0; i < stDes.size(); i++){
+				if(entry.getDest().equals(st_idDes.get(i))){ %>
+  					<option id="<%=st_idDes.get(i)%>" name="dest" value=<%=st_idDes.get(i)%> selected ><%out.print(stDes.get(i));%></option>
 				<% } else { %>
-					<option id=<%=st_id.get(i)%> name="dest" value=<%=st_id.get(i)%>><%out.print(st.get(i));%></option>
+					<option id=<%=st_idDes.get(i)%> name="dest" value=<%=st_idDes.get(i)%>><%out.print(stDes.get(i));%></option>
 				<%}
 			}%>
 			</select>
+			<input type="submit" name = "station_change" value = "Find New Times">
 
-			<p><b>Change Time: </b>
+			</p>
+			</form>
+
+
+			<%
+			session.setAttribute("v_org", entry.getOrigin());
+			session.setAttribute("v_dest", entry.getDest());
+
+			if((request.getParameter("origin") != null) && (request.getParameter("dest") != null)){
+				session.setAttribute("v_org", request.getParameter("origin"));
+				session.setAttribute("v_dest", request.getParameter("dest"));
+			}
+				String getTimes = "select distinct tst.arrival_time, tst.schedule_num"
+								+ " from train_schedule_timings tst, train_schedule_assignment tsa, transit_line_route tlr"
+								+ " where tsa.schedule_num = tst.schedule_num AND tsa.tl_id = '" + entry.getTransit()  + "' AND tst.route_id = tlr.route_id AND tlr.start_station_id = " + session.getAttribute("v_org");
+
+				//where tsa.schedule_num = tst.schedule_num AND tsa.tl_id = 'PB' AND tst.route_id = tlr.route_id AND tlr.start_station_id = 18;
+
+				System.out.println(getTimes);
+				result = stmt.executeQuery(getTimes);
+				ArrayList<String> times = new ArrayList<String>();
+				ArrayList<String> schNum = new ArrayList<String>();
+				while(result.next()){
+					times.add(result.getString("tst.arrival_time"));
+					schNum.add(result.getString("tst.schedule_num"));
+				}
+			%>
+
+
+
+			<form action = "resPage.jsp?v_rid=<%=rid%>" method= "post">
+
+			<p><b>Change Departure Time: </b>
 			<select id="schNum" name="schNum">
-			<% for(int i = 0; i < times.size(); i++){ %>
-  				<option id=<%=schNum.get(i)%> name="schNum" value=<%=schNum.get(i)%>><%out.print(times.get(i));%></option>
-			<% } %>
+
+			<% for(int i = 0; i < times.size(); i++){
+			if(sch_num.equals(schNum.get(i))){ %>
+  					<option id=<%=schNum.get(i)%> name="schNum" value=<%=schNum.get(i)%> selected ><%out.print(times.get(i));%></option>
+				<% } else { %>
+					<option id=<%=schNum.get(i)%> name="schNum" value=<%=schNum.get(i)%>><%out.print(times.get(i));%></option>
+				<%}
+			} %>
 			</select></p>
 
+
 			<p><b>Change Ticket Type: </b></p>
+
 			<%if(entry.getTrip().equals("One-Way")){ %>
 			<input type="radio" id="one" name="trip" value="One" checked/>
-			<label for="one">One-Way</label>
+				<label for="one">One-Way</label>
 			<input type="radio" id="two" name="trip" value="Round">
-			<label for="two">Round-Trip</label>
+				<label for="two">Round-Trip</label>
 			<input type="radio" id="weekly" name="trip" value="Weekly">
-			<label for="weekly">Weekly</label>
+				<label for="weekly">Weekly</label>
 			<input type="radio" id="monthly" name="trip" value="Monthly">
-			<label for="monthly">Monthly</label>
+				<label for="monthly">Monthly</label>
 
 			<% }  else if(entry.getTrip().equals("Round")) { %>
 			<input type="radio" id="one" name="trip" value="One"/>
@@ -175,6 +207,7 @@
 
 
 			<p><b>Change Discount:</b></p>
+
 			<%if(entry.getDisc().equals("None")){ %>
 			<input type="radio" id="normal" name="discount" value="Normal" checked>
 			<label for="discount">None</label>
@@ -234,8 +267,9 @@
 
 			<a style="color: black; text-decoration: none;" href="resPage.jsp?v_val=cancel?">
 			<button a style="color: black;">Cancel</button></a>
+
 			<p><a style="color: black; text-decoration: none;" href = "resPage.jsp?v_rid=<%=rid%>">
-			<button a style = "color: white; background-color: red;" name = "res_change" value = "delete">Delete Reservation</button>
+			<button style = "color: white; background-color: red;" name = "res_change" value = "delete">Delete Reservation</button>
 			</a></p>
 			</form>
 

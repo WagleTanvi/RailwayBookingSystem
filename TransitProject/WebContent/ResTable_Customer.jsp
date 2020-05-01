@@ -16,8 +16,8 @@
 			response.sendRedirect("index.jsp");
 		}
 		out.println("<h2>" + session.getAttribute("user") + "'s Reservations</h2>" );%>
-          <p> Please note that the 'Date Reserved' for Monthly and Weekly tickets refers to date the pass becomes active </p>
 
+		<p> Please note that the 'Date Reserved' for Monthly and Weekly tickets refer to date the pass becomes active </p>
 
 		<table id = "resvationTable" align = "center" style="width:90%">
 
@@ -27,7 +27,7 @@
     	<th>Origin</th>
     	<th>Destination</th>
     	<th>Date Reserved</th>
-    	<th>Arrival Time </th>
+    	<th>Departure Time </th>
     	<th>Cost</th>
     	<th>Class</th>
     	<th>Ticket Type</th>
@@ -49,7 +49,7 @@
 					+ " FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst, transit_line_route tlr"
 					+ " WHERE r.username = '" + session.getAttribute("user") + "' AND r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num; ";
 			//sString v_rid = "";
-			//System.out.println(session.getAttribute("user"));
+			//System.out.println(str);
 
 			//to hold all the information from the database
 			ArrayList<ResObj> customerTable = new ArrayList<ResObj>();
@@ -82,6 +82,7 @@
 				entry.setOrigin(result.getString("r.origin"));
 
 				customerTable.add(entry);
+				System.out.println("added");
 			}
 
 
@@ -103,6 +104,8 @@
 
 			db.closeConnection(con); //close database
 
+			//System.out.println(customerTable.size());
+
 			for(int i = 0; i < customerTable.size(); i++){
 				out.print("<tr>");
 				out.print(customerTable.get(i).printTable());
@@ -114,6 +117,7 @@
 
 				<%
 				out.print("</td></tr>");
+				System.out.println("i" + i);
 			}
 		} catch (Exception e) {
 			out.print(e);
