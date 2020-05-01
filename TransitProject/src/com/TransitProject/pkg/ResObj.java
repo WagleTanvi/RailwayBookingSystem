@@ -65,7 +65,7 @@ public class ResObj {
 		time = t;
 	}
 
-	public void setDTime(String t) {
+	public void setATime(String t) {
 		dtime = t;
 	}
 

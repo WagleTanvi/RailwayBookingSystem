@@ -56,8 +56,9 @@
 
 			//Run the query against the database.
 			ResultSet result = stmt.executeQuery(str);
+			//ResultSet result2 = stmt.executeQuery(str2);
 
-			while(result.next()) {
+			while((result.next())) {
 				ResObj entry = new ResObj();
 
 				entry.setTransit(result.getString("tsa.tl_id"));
@@ -81,9 +82,16 @@
 				entry.setDest(result.getString("r.destination"));
 				entry.setOrigin(result.getString("r.origin"));
 
+				//entry.setATime(result2.getString("tst.arrival_time"));
+
 				customerTable.add(entry);
 				System.out.println("added");
 			}
+
+
+		//sString v_rid = "";
+
+
 
 
 			for(int i = 0; i < customerTable.size(); i++){
