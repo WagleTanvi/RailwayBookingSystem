@@ -177,7 +177,7 @@
 			<input type="radio" id="senior/child" name="discount" value="Senior/Child">
 			<label for="senior">Senior/Child</label>
 			<input type="radio" id="disabled" name="discount" value="Disabled">
-			<label for="disabled">Disabled</label><br>
+			<label for="disabled">Disabled</label>
 
 			<% }else if(entry.getDisc().equals("Senior/Child")){ %>
 			<input type="radio" id="normal" name="discount" value="Normal">
@@ -185,7 +185,7 @@
 			<input type="radio" id="senior/child" name="discount" value="Senior/Child" checked>
 			<label for="senior">Senior/Child</label>
 			<input type="radio" id="disabled" name="discount" value="Disabled">
-			<label for="disabled">Disabled</label><br>
+			<label for="disabled">Disabled</label>
 
 			<% }else if(entry.getDisc().equals("Disabled")){ %>
 			<input type="radio" id="normal" name="discount" value="Normal">
@@ -193,14 +193,14 @@
 			<input type="radio" id="senior/child" name="discount" value="Senior/Child" >
 			<label for="senior">Senior/Child</label>
 			<input type="radio" id="disabled" name="discount" value="Disabled" checked>
-			<label for="disabled">Disabled</label><br>
+			<label for="disabled">Disabled</label> <br>
 
 			<% } %>
 
 			<p><b>Change Class:</b></p>
 			<%if(entry.getClas().equals("Business")){ %>
 			<input type="radio" id="Economy" name="class" value="Economy">
-			<label for="Economy">Economy</label><br><br>
+			<label for="Economy">Economy</label>
 			<input type="radio" id="Business" name="class" value="Business" checked>
 			<label for="business">Business</label>
 			<input type="radio" id="First" name="class" value="First">
@@ -208,7 +208,7 @@
 
 			<% }else if(entry.getClas().equals("First")){ %>
 			<input type="radio" id="Economy" name="class" value="Economy">
-			<label for="Economy">Economy</label><br><br>
+			<label for="Economy">Economy</label>
 			<input type="radio" id="Business" name="class" value="Business">
 			<label for="business">Business</label>
 			<input type="radio" id="First" name="class" value="First" checked>
@@ -216,13 +216,15 @@
 
 			<% }else if(entry.getClas().equals("Economy")){ %>
 			<input type="radio" id="Economy" name="class" value="Economy" checked >
-			<label for="Economy">Economy</label><br><br>
+			<label for="Economy">Economy</label>
 			<input type="radio" id="Business" name="class" value="Business">
 			<label for="business">Business</label>
 			<input type="radio" id="First" name="class" value="First">
 			<label for="First">First</label>
 
 			<% } %>
+
+			<br><br>
 
 			<input type="submit" name = "res_change" value = "Update">
 
