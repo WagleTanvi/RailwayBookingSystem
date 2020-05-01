@@ -1,225 +1,147 @@
-<!-- Written By: Vancha Verma vv199 -->
+<!-- Written By: Vancha Verma vv199 and BONING DING bnd28 -->
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"
     import="com.TransitProject.pkg.*"%>
 <%@ page import="java.io.*,java.util.*,java.sql.*"%>
-<%@ page import="javax.servlet.http.*,javax.servlet.*"%>
-<%@ page import="java.util.ArrayList" %>
+<%@ page import= "java.time.format.DateTimeFormatter, java.time.LocalDateTime"%>
+<%@ page import = "java.text.DateFormat, java.text.SimpleDateFormat, java.util.Date, java.util.Calendar"   %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Reservations </title>
+<title>Insert title here</title>
 </head>
 <body>
-<h1 style="text-align:center; top:50px;"> User Reservations</h1>
+
 <%
+	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+		response.sendRedirect("index.jsp");
+	}
+	String username = (String) session.getAttribute("username");
+	if(((String)session.getAttribute("role")).equals("customer")){
+		username = (String) session.getAttribute("user");
+	}
 
-if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
-	response.sendRedirect("index.jsp");
-}
-
-		try{
-
-
-
+	String sch_num = (String) session.getAttribute("schedule");
+	String date_ticket = (String) session.getAttribute("date"); //the day its reserved for
+	String or = (String) session.getAttribute("origin");
+	String dest = (String) session.getAttribute("destination");
+	String cls = (String) session.getAttribute("class");
+	String trip = (String) session.getAttribute("trip");
+	String discount = (String) session.getAttribute("discount");
+	String f = (String) session.getAttribute("r_fare");
+	System.out.println(username + " " + sch_num + " " + date_ticket +  " " + or + " " + dest + " " + cls + " " + trip + " " + discount + " " + f);
+	try{
 			//connect to database
 			ApplicationDB db = new ApplicationDB();
 			Connection con = db.getConnection();
 			Statement stmt = con.createStatement();
-			String users = "SELECT distinct r.username from reservations r;";
-
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(users); %>
-			<form action = "resPage.jsp" method= "post">
-			<select name="username" id="username">
-			<option value="" selected>All users</option>
-
-			<%
-			while(result.next()) {
-			%>
-  			<option value=<%=result.getString("r.username")%> ><%out.print(result.getString("r.username"));%> </option>
-
-			<%
+			Date date = Calendar.getInstance().getTime();
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		    Date dateobj = new Date();
+		    System.out.println(df.format(dateobj));
+			//double total_cost = 0;
+			int fare = Integer.parseInt(f);
+			int origin = 0;
+			int destination = 0;
+			String date_reserved = df.format(dateobj);
+			String getStation = "SELECT s.name, s.station_id FROM station s"
+							+ " WHERE s.name = '" + or + "' OR s.name = '" + dest + "';";
+			//System.out.println(getStation);
+			ResultSet result = stmt.executeQuery(getStation);
+			while(result.next()){
+				if(result.getString("name").equals(or)){
+					origin = result.getInt("station_id");
+				} else if(result.getString("name").equals(dest)){
+					destination = result.getInt("station_id");
+				}
 			}
-			%>
-			</select>
-
-			<%
-			String lineName = "SELECT tl.tl_id from transit_line tl;";
-			result = stmt.executeQuery(lineName); %>
-
-			<select name="transitLine" id="transitLine">
-			<option value="" selected>All Transit Lines</option>
-			<%
-			while(result.next()) {
-			%>
-
-  			<option value=<%=result.getString("tl.tl_id")%> ><%out.print(result.getString("tl.tl_id"));%> </option>
-
-			<%
+			//out.print("here");
+			if(trip.equals("Round")){
+				fare = fare *2;
+			} else if (trip.equals("Monthly")){
+				fare = fare * 30;
+			} else if (trip.equals("Weekly")) {
+				fare = fare * 7;
 			}
-			%>
-			</select>
-
-			<%
-			String trainID = "SELECT t.train_id from train t;";
-			result = stmt.executeQuery(trainID); %>
-
-			<select name="trainID" id="trainID">
-			<option value="" selected>All Trains</option>
-			<%
-			while(result.next()) {
-			%>
-
-  			<option value=<%=result.getString("t.train_id")%> ><%out.print(result.getString("t.train_id"));%> </option>
-
-			<%
+			if(discount.equals("Senior/Child") || discount.equals("Disabled") ){
+				fare = fare/2;
 			}
+			if(cls.equals("First") || cls.equals("Buisness") ){
+				fare = fare + 5;
+			}
+			double totalFare = fare * Math.abs((destination - origin));
+			System.out.println(totalFare);
+			totalFare += 3.5;
+			String insert = "INSERT INTO reservations "
+					+ "(username, total_cost, origin, destination, schedule_num, class, date_ticket, date_reserved, booking_fee, discount, trip)"
+					+ " VALUES ( '" + username + "' , "
+					+ totalFare + ", "
+					+ origin + " , "
+					+ destination + " , "
+					+ sch_num + " , '"
+					+ cls + "', '"
+					+ date_ticket + "', '"
+					+ date_reserved + "', "
+					+ 3.5 + ", '"
+					+ discount + "', '"
+					+ trip + "');";
+			//System.out.println(insert);
+			stmt.executeUpdate(insert);
 
+			//CODE STARTING HERE BY bnd28 AND vv199
+			int schedule_num = Integer.parseInt(sch_num);
+			@SuppressWarnings("unchecked")
+			ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
+			@SuppressWarnings("unchecked")
+			ArrayList<Integer> scheduleNumsInit = (ArrayList<Integer>)session.getAttribute("scheduleNumsInit");
+			@SuppressWarnings("unchecked")
+			ArrayList<String> startTimesInit = (ArrayList<String>)session.getAttribute("startTimesInit");
 
-			%>
+			String tst = "SELECT * from train_schedule_timings tst WHERE tst.schedule_num = " + sch_num + "ORDER BY arrival_time";
+			String tsa = "SELECT tl.tl_name from transit_line tl, train_schedule_assignment tsa where tsa.schedule_num = " + sch_num + " AND tsa.tl_id = tl.tl_id;";
 
-			</select>
+			String start = "";
+			String tLine = "";
 
-			<INPUT TYPE="submit" VALUE="Filter"/>
-			</form>
+			if(!(scheduleNumsInit.contains(schedule_num)) && startTimesInit.contains(start)){
+				ResultSet r1 = stmt.executeQuery(tst);
+				ResultSet r2 = stmt.executeQuery(tsa);
+				String tl_name = "";
+				while(r2.next()){
+					tl_name = r2.getString("tl_name");
+				}
 
-			<p></p>
-			<%
+				while(r1.next()){
+					startTimesInit.add(r1.getString("arrival_time"));
+					scheduleNumsInit.add(schedule_num);
+					transitLinesInit.add(tl_name);
+				}
 
+				transitLinesInit.add(tLine);
+				scheduleNumsInit.add(schedule_num);
+				startTimesInit.add(start);
+
+			}
+			session.setAttribute("transitLinesInit", transitLinesInit);
+			session.setAttribute("scheduleNumsInit", scheduleNumsInit);
+			session.setAttribute("startTimesInit", startTimesInit);
+
+			//CODE ENDING HERE BY bnd28 AND vv199
+			session.removeAttribute("username");
+			session.removeAttribute("schedule");
+			session.removeAttribute("date"); //the day its reserved for
+			session.removeAttribute("origin");
+			session.removeAttribute("destination");
+			session.removeAttribute("class");
+			session.removeAttribute("trip");
+			session.removeAttribute("discount");
+			session.removeAttribute("r_fare");
 			db.closeConnection(con);
 		} catch (Exception e) {
 			out.print(e);
 		}
-		%>
-
-<table id = "resvationTable" align = "center" style="width:90%">
-
-  	<tr>
-  		<th>User</th>
-  		<th>Transit Line</th>
-    	<th>Train ID</th>
-    	<th>Origin</th>
-    	<th>Destination</th>
-    	<th>Date Reserved</th>
-    	<th>Arrival Time </th>
-    	<th>Cost</th>
-    	<th>Class</th>
-    	<th>Ticket Type</th>
-    	<th>Discount</th>
-    	<th>Date Bought</th>
-    	<th>Edit</th>
-	</tr>
-
-<%
-
-		try{
-				//connect to database
-				ApplicationDB db = new ApplicationDB();
-				Connection con = db.getConnection();
-				Statement stmt = con.createStatement();
-				//String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst WHERE r.schedule_num = tsa.schedule_num AND r.username = '" + session.getAttribute("user") + "' ORDER BY tsa.train_id;";
-				String str = "SELECT tsa.tl_id, tst.arrival_time, tsa.train_id, r.*"
-						+ " FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst, transit_line_route tlr"
-						+ " WHERE r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num";
-				//sString v_rid = "";
-				//System.out.println(session.getAttribute("user"));
-
-
-			if(request.getParameter("username") != null){
-				if(!(request.getParameter("username").equals(""))){
-					str = str + " AND r.username = '" + request.getParameter("username") +"'";
-				}
-			}
-
-			if(request.getParameter("username") != null){
-				if(!(request.getParameter("transitLine").equals(""))){
-					str = str + " AND tsa.tl_id = '" + request.getParameter("transitLine") +"'";
-				}
-			}
-
-			if(request.getParameter("username") != null){
-				if(!(request.getParameter("trainID").equals(""))){
-					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";
-				}
-			}
-
-			str = str + " ORDER BY r.username, tsa.train_id;";
-
-			//System.out.println(str);
-
-			//to hold all the information from the database
-			ArrayList<ResObj> customerTable = new ArrayList<ResObj>();
-
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(str);
-
-			while(result.next()) {
-				ResObj entry = new ResObj();
-				entry.setUser(result.getString("r.username"));
-				entry.setTransit(result.getString("tsa.tl_id"));
-				entry.setTrain(result.getString("tsa.train_id"));
-				entry.setRid(result.getString("r.rid"));
-				entry.setBought(result.getString("r.date_reserved"));
-				entry.setResDate(result.getString("r.date_ticket"));
-				entry.setClass(result.getString("r.class"));
-				entry.setCost("$"+ result.getString("r.total_cost"));
-				entry.setTime(result.getString("tst.arrival_time"));
-				entry.setDisc(result.getString("r.discount"));
-				if(result.getString("r.discount").equals("Normal")){
-					entry.setDisc("None");
-				}
-				if(result.getString("r.trip").equals("One")){
-					entry.setTrip("One-Way");
-				} else {
-					entry.setTrip(result.getString("r.trip"));
-				}
-
-				entry.setDest(result.getString("r.destination"));
-				entry.setOrigin(result.getString("r.origin"));
-
-				customerTable.add(entry);
-			}
-
-
-			for(int i = 0; i < customerTable.size(); i++){
-				String getS = "SELECT s.name, s.station_id FROM station s WHERE s.station_id = "
-				+ customerTable.get(i).getOrigin() + " OR s.station_id = " + customerTable.get(i).getDest();
-				ResultSet origin = stmt.executeQuery(getS);
-				while(origin.next()) {
-					if((origin.getString("station_id").equals(customerTable.get(i).getOrigin()))){
-						customerTable.get(i).setOrigin(origin.getString("name"));
-					}
-
-					if((origin.getString("station_id").equals(customerTable.get(i).getDest()))){
-						customerTable.get(i).setDest(origin.getString("name"));
-					}
-
-				}
-			}
-
-			db.closeConnection(con); //close database
-
-			for(int i = 0; i < customerTable.size(); i++){
-				out.print("<tr>");
-				out.print(customerTable.get(i).printTable_Rep());
-				out.print("<td>");
-				%>
-				<button>
-					<a style="color: black; "href= "editRes.jsp?v_val=<%=customerTable.get(i).getRid()%>" >Edit</a>
-				</button>
-
-				<%
-				out.print("</td></tr>");
-			}
-		} catch (Exception e) {
-			out.print(e);
-		}
-
-	%>
-
-	</table>
+%>
 
 </body>
 </html>
