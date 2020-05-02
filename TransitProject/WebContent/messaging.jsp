@@ -286,13 +286,13 @@
 		ResultSet res = stmt.executeQuery("SELECT t.schedule_num, t.arrival_time, tl.tl_name FROM `train_schedule_timings` t, `reservations` r, `transit_line` tl, `train_schedule_assignment` tsa WHERE tsa.schedule_num = t.schedule_num AND tsa.tl_id = tl.tl_id AND t.schedule_num = r.schedule_num AND r.username='" + session.getAttribute("user") + "' ORDER BY t.arrival_time");
 	 	while(res.next()) {
 	 		if(!(scheduleNums.contains(res.getInt("t.schedule_num")) && startTimes.contains(res.getString("t.arrival_time")))) {
-	 			System.out.println("transitLine: " + res.getString("tl.tl_name"));
+	 			//System.out.println("transitLine: " + res.getString("tl.tl_name"));
 		 		transitLines.add(res.getString("tl.tl_name"));
 		 	
-		 		System.out.println("scheduleNum: " + res.getInt("t.schedule_num"));
+		 		//System.out.println("scheduleNum: " + res.getInt("t.schedule_num"));
 		 		scheduleNums.add(res.getInt("t.schedule_num"));
 		 	
-		 		System.out.println("startTimes: " + res.getString("t.arrival_time"));
+		 		//System.out.println("startTimes: " + res.getString("t.arrival_time"));
 		 		startTimes.add(res.getString("t.arrival_time"));
 	 		}
 	 		
@@ -301,8 +301,8 @@
 		@SuppressWarnings("unchecked")
 		ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
 		
-		System.out.println("\n\nTRANSIT LINES SIZE: " + transitLinesInit.size());
 		if(transitLinesInit.size() > 0) {
+			System.out.println(startTimes.size());
 			out.println("<div class='alert'>");
 			@SuppressWarnings("unchecked")
 			ArrayList<Integer> scheduleNumsInit = (ArrayList<Integer>)session.getAttribute("scheduleNumsInit");
@@ -311,6 +311,8 @@
 			
 			int flag = 0;
 			for(int i = 0; i < startTimes.size(); i++) {
+				System.out.println("START TIME\n\n\n");
+				System.out.println(startTimes.get(0));
 				String[] currTime = startTimes.get(i).split(":");
 				int currS = (Integer.parseInt(currTime[0]) * 60 * 60) + (Integer.parseInt(currTime[1])) * 60 + Integer.parseInt(currTime[2]);
 				
@@ -329,6 +331,7 @@
 					System.out.println("on time");
 				}
 			}
+			
 			if(flag == 0) {
 				out.println("<h2>All reservations will be arriving on time!</h2>");
 			}
@@ -340,9 +343,6 @@
 		}
 		
     %>
-<!--     <div class="alert">
-    	<h2>__TRANSIT LINE__ DELAYED __MINS__</h2>
-    </div> -->
     
     <%	
 		String msgQuery = "SELECT * FROM messaging ORDER BY mid DESC";
@@ -507,6 +507,8 @@
 		    		    response.sendRedirect("messaging.jsp");
 	    		    }
 	    	    }
+	    	    
+	    	    db.closeConnection(con);
     		%>
     	}
     </script>

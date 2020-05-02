@@ -18,11 +18,15 @@
 		response.sendRedirect("index.jsp");
 	}
 
+	/* String username = (String) session.getAttribute("username");
+	if(((String)session.getAttribute("role")).equals("customer")){
+		username = (String) session.getAttribute("user");
+	} */
+	
 	String username = (String) session.getAttribute("user");
-	if(session.getAttribute("username") != null){
-		username = (String) session.getAttribute("username");
-	}
-
+    if(session.getAttribute("username") != null){
+        username = (String) session.getAttribute("username");
+    }
 
 	String sch_num = (String) session.getAttribute("schedule");
 	String date_ticket = (String) session.getAttribute("date"); //the day its reserved for
@@ -113,31 +117,44 @@
 			@SuppressWarnings("unchecked")
 			ArrayList<String> startTimesInit = (ArrayList<String>)session.getAttribute("startTimesInit");
 
-			String tst = "SELECT * from train_schedule_timings tst WHERE tst.schedule_num = " + sch_num + "ORDER BY arrival_time";
-			String tsa = "SELECT tl.tl_name from transit_line tl, train_schedule_assignment tsa where tsa.schedule_num = " + sch_num + " AND tsa.tl_id = tl.tl_id;";
-
+			String tst = "SELECT * from train_schedule_timings tst WHERE tst.schedule_num = " + sch_num + " ORDER BY tst.arrival_time";
+			String tsa = "SELECT tl.tl_name from transit_line tl, train_schedule_assignment tsa where tsa.schedule_num = " + sch_num + " AND tsa.tl_id = tl.tl_id";
+			System.out.println(tst);
+			System.out.println(tsa);
 			String start = "";
-			String tLine = "";
+			
+			ResultSet r2 = stmt.executeQuery(tsa);
+			String tl_name = "";
+			while(r2.next()){
+				tl_name = r2.getString("tl_name");
+			}
+			ResultSet r1 = stmt.executeQuery(tst);
+			while(r1.next()){
+				if(!(scheduleNumsInit.contains(schedule_num) && startTimesInit.contains(r1.getString("tst.arrival_time")))){
+				
+				
 
-			if(!(scheduleNumsInit.contains(schedule_num)) && startTimesInit.contains(start)){
-				ResultSet r1 = stmt.executeQuery(tst);
-				ResultSet r2 = stmt.executeQuery(tsa);
-				String tl_name = "";
-				while(r2.next()){
-					tl_name = r2.getString("tl_name");
-				}
-
-				while(r1.next()){
+				
+				
 					startTimesInit.add(r1.getString("arrival_time"));
+					System.out.println(r1.getString("arrival_time"));
+					
 					scheduleNumsInit.add(schedule_num);
+					System.out.println(schedule_num);
+					
 					transitLinesInit.add(tl_name);
+					System.out.println(tl_name);
 				}
-
-				transitLinesInit.add(tLine);
+				
+				/* transitLinesInit.add(tl_name);
 				scheduleNumsInit.add(schedule_num);
-				startTimesInit.add(start);
+				startTimesInit.add(start); */
 
 			}
+			
+			System.out.println("\n\nTRANSIT LINES SIZE: " + transitLinesInit.size());
+			System.out.println("\n\nSTART TIMES SIZE: " + startTimesInit.size());
+			System.out.println("\n\nSCHEDULE NUM SIZE: " + scheduleNumsInit.size());
 
 			session.setAttribute("transitLinesInit", transitLinesInit);
 			session.setAttribute("scheduleNumsInit", scheduleNumsInit);

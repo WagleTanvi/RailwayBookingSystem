@@ -45,6 +45,41 @@
 
 				if((request.getParameter("res_change")).equals("delete") && (request.getParameter("v_rid") != null)){
 					rid = request.getParameter("v_rid");
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<String> transitLinesInit = (ArrayList<String>)session.getAttribute("transitLinesInit");
+					@SuppressWarnings("unchecked")
+					ArrayList<Integer> scheduleNumsInit = (ArrayList<Integer>)session.getAttribute("scheduleNumsInit");
+					@SuppressWarnings("unchecked")
+					ArrayList<String> startTimesInit = (ArrayList<String>)session.getAttribute("startTimesInit");
+					
+					String str = "SELECT schedule_num FROM reservations WHERE rid=" + rid;
+					ResultSet res = stmt.executeQuery(str);
+					int s = 0;
+					while(res.next()) {
+						s = res.getInt("schedule_num");
+						System.out.println("GOING HERE\n\n");
+						System.out.println(s);
+						
+					};
+					
+					for (int i = 0; i < scheduleNumsInit.size(); i++) {
+						if(scheduleNumsInit.get(i) == s) {
+							System.out.println("REMOVING");
+							scheduleNumsInit.remove(i);
+							transitLinesInit.remove(i);
+							startTimesInit.remove(i);
+							i--;
+						}
+					}
+					
+					System.out.println("\n\nSIZE OF SCHEDULE NUMS AFTER REMOVAL: " + scheduleNumsInit.size());
+					
+					session.setAttribute("transitLinesInit", transitLinesInit);
+ 			        session.setAttribute("scheduleNumsInit", scheduleNumsInit);
+ 			        session.setAttribute("startTimesInit", startTimesInit);
+					
+					
 					String remove = "delete from reservations where rid = " + rid;
 					stmt.executeUpdate(remove);
 
