@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Reservations </title>
+<title> Reservations </title>
 </head>
 <body>
 <h1 style="text-align:center; top:50px;"> User Reservations</h1>
@@ -19,22 +19,27 @@
 
 <%
 
-	if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
-		response.sendRedirect("index.jsp");
-	}
+if((session.getAttribute("user") == null) || (session.getAttribute("role") == null))  {
+	response.sendRedirect("index.jsp");
+}
 
 		try{
 
+
+
 			//connect to database
-			//out.println("here");
 			ApplicationDB db = new ApplicationDB();
 			Connection con = db.getConnection();
 			Statement stmt = con.createStatement();
+			String users = "SELECT distinct r.username from reservations r;";
 
+			//Run the query against the database.
+			ResultSet result = stmt.executeQuery(users); %>
+			<form action = "resPage.jsp" method= "post">
+
+			<%
 			String lineName = "SELECT tl.tl_id from transit_line tl;";
-			ResultSet result = stmt.executeQuery(lineName);
-
-			%>
+			result = stmt.executeQuery(lineName); %>
 
 			<select name="transitLine" id="transitLine">
 			<option value="" selected>All Transit Lines</option>
@@ -71,8 +76,10 @@
 
 			<INPUT TYPE="submit" VALUE="Filter"/>
 			</form>
+
 			<p></p>
 			<%
+
 			db.closeConnection(con);
 		} catch (Exception e) {
 			out.print(e);
@@ -100,27 +107,26 @@
 <%
 
 		try{
-
-			//connect to database
-			ApplicationDB db = new ApplicationDB();
-			Connection con = db.getConnection();
-			Statement stmt = con.createStatement();
-
-			String str = "SELECT tsa.tl_id, tst.arrival_time, tsa.train_id, r.*"
-					+ " FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst, transit_line_route tlr"
-					+ " WHERE r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num";
-			//sString v_rid = "";
-			//System.out.println(session.getAttribute("user"));
-			if(request.getParameter("trainID") != null) {
-				if(!(request.getParameter("trainID").equals(""))){
-					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";
-				}
-			}
-
+				//connect to database
+				ApplicationDB db = new ApplicationDB();
+				Connection con = db.getConnection();
+				Statement stmt = con.createStatement();
+				//String str = "SELECT tsa.tl_id, tsa.train_id, r.rid, r.date_reserved, r.date_ticket,  r.class, r.total_cost, r.origin, r.destination FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst WHERE r.schedule_num = tsa.schedule_num AND r.username = '" + session.getAttribute("user") + "' ORDER BY tsa.train_id;";
+				String str = "SELECT tsa.tl_id, tst.arrival_time, tsa.train_id, r.*"
+						+ " FROM reservations r, train_schedule_assignment tsa, train_schedule_timings tst, transit_line_route tlr"
+						+ " WHERE r.schedule_num = tsa.schedule_num AND r.origin = tlr.start_station_id AND tlr.route_id = tst.route_id AND r.schedule_num = tst.schedule_num";
+				//sString v_rid = "";
+				//System.out.println(session.getAttribute("user"));
 
 			if(request.getParameter("transitLine") != null){
 				if(!(request.getParameter("transitLine").equals(""))){
 					str = str + " AND tsa.tl_id = '" + request.getParameter("transitLine") +"'";
+				}
+			}
+
+			if(request.getParameter("trainID") != null){
+				if(!(request.getParameter("trainID").equals(""))){
+					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";
 				}
 			}
 
@@ -195,7 +201,6 @@
 		} catch (Exception e) {
 			out.print(e);
 		}
-
 
 	%>
 
