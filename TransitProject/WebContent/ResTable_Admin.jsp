@@ -137,13 +137,13 @@ if((session.getAttribute("user") == null) || (session.getAttribute("role") == nu
 				}
 			}
 
-			if(request.getParameter("username") != null){
+			if(request.getParameter("transitLine") != null){
 				if(!(request.getParameter("transitLine").equals(""))){
 					str = str + " AND tsa.tl_id = '" + request.getParameter("transitLine") +"'";
 				}
 			}
 
-			if(request.getParameter("username") != null){
+			if(request.getParameter("trainID") != null){
 				if(!(request.getParameter("trainID").equals(""))){
 					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";
 				}

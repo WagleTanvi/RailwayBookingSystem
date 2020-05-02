@@ -30,16 +30,31 @@
 			ApplicationDB db = new ApplicationDB();
 			Connection con = db.getConnection();
 			Statement stmt = con.createStatement();
-			//out.println("here");
+
+			String lineName = "SELECT tl.tl_id from transit_line tl;";
+			ResultSet result = stmt.executeQuery(lineName);
+
+			%>
+
+			<select name="transitLine" id="transitLine">
+			<option value="" selected>All Transit Lines</option>
+			<%
+			while(result.next()) {
+			%>
+
+  			<option value=<%=result.getString("tl.tl_id")%> ><%out.print(result.getString("tl.tl_id"));%> </option>
+
+			<%
+			}
+			%>
+			</select>
+
+			<%
 			String trainID = "SELECT t.train_id from train t;";
+			result = stmt.executeQuery(trainID); %>
 
-			//Run the query against the database.
-			ResultSet result = stmt.executeQuery(trainID);  %>
-			<form action = "resPage.jsp" method= "post">
-
-			<select name="trainID" id="trainID" value="">
+			<select name="trainID" id="trainID">
 			<option value="" selected>All Trains</option>
-
 			<%
 			while(result.next()) {
 			%>
@@ -101,6 +116,14 @@
 					str = str + " AND tsa.train_id = '" + request.getParameter("trainID") +"'";
 				}
 			}
+
+
+			if(request.getParameter("transitLine") != null){
+				if(!(request.getParameter("transitLine").equals(""))){
+					str = str + " AND tsa.tl_id = '" + request.getParameter("transitLine") +"'";
+				}
+			}
+
 			str = str + " ORDER BY r.username, tsa.train_id;";
 
 			//System.out.println(str);
