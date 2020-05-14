@@ -22,6 +22,7 @@ CREATE TABLE `transit_line`(
     `tl_name` varchar(50) DEFAULT NULL,
     `origin_station_id` int NOT NULL,
     `termin_station_id` int NOT NULL,
+    fare real,
     Primary Key (`tl_id`),
     Foreign Key (`origin_station_id`) references `station` (`station_id`),
     Foreign Key (`termin_station_id`) references `station` (`station_id`)
@@ -49,14 +50,13 @@ CREATE table `transit_line_route`(
     Foreign Key (`end_station_id`) references `station` (`station_id`)
     
 );
-
 Create table `train_schedule_timings` (
 	schedule_num int,
     route_id int,
     departure_time time,
     arrival_time time,
     Primary Key (route_id, schedule_num),
-    Foreign Key (`schedule_num`) references `train_schedule_assignment` (`schedule_num`),
+    Foreign Key (`schedule_num`) references `train_schedule_assignment` (`schedule_num`) on delete cascade,
     Foreign Key (`route_id`) references `transit_line_route` (`route_id`)
 );
 
@@ -74,31 +74,36 @@ CREATE TABLE `users` (
   PRIMARY KEY (`username`)
 ); 
 
-CREATE TABLE `fare` (
-  `fare_name` varchar(50) NOT NULL,
-  `fare_cost` double DEFAULT NULL,
-   PRIMARY KEY (`fare_name`)
-);
 Create table reservations (
-	rid int,
+	rid int NOT NULL auto_increment,
     username varchar(50),
-    fare_name varchar(50),
+    total_cost real NOT NULL,
+    origin int,
+    destination int,
     schedule_num int,
-	class varchar(10),
-	date date,
-    booking_fee real,
-    Primary Key (rid),
-    Foreign Key (`schedule_num`) references `train_schedule_assignment` (`schedule_num`),
-    FOREIGN KEY (`username`) REFERENCES `users` (`username`),
-    FOREIGN KEY (`fare_name`) REFERENCES `fare` (`fare_name`)
-);
+class enum('Business','First','Economy') NOT NULL,
+	date_ticket date NOT NULL,
+    date_reserved date NOT NULL,
+    booking_fee real NOT NULL,
+    discount enum('Disabled', 'Senior/Child', 'Normal') NOT NULL,
+	trip enum('Round', 'One', 'Monthly', 'Weekly') NOT NULL,
+    Primary Key (rid), 
+    Foreign Key (`schedule_num`) references `train_schedule_assignment` (`schedule_num`) on delete cascade,
+    Foreign Key(`origin`) references `station` (`station_id`), 
+    Foreign Key(`destination`) references `station`(`station_id`), 
+    FOREIGN KEY (`username`) REFERENCES `users` (`username`) on delete cascade
+); 
+
 
 CREATE TABLE `messaging` (
-	`mid` int,
-	`username` varchar(50),
-	`role` enum('customer_service_rep','customer','administrator'),
+	`mid` int NOT NULL AUTO_INCREMENT,
+	`user` varchar(50),
+    `subject` varchar(150),
 	`content` TEXT,
-	`answer` TEXT NOT NULL DEFAULT '',
+    `admin` varchar(50),
+	`answer` TEXT,
 	PRIMARY KEY(`mid`),
-	FOREIGN KEY (`username`, `role`) REFERENCES `users` (`username`, `role`)
+	FOREIGN KEY (`user`) REFERENCES `users` (`username`) ON DELETE CASCADE,
+    FOREIGN KEY (`admin`) REFERENCES `users`(`username`) ON DELETE CASCADE
 );
+
