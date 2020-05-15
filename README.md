@@ -2,7 +2,9 @@
 CS 336: Principles of Information and Database Management   
 Spring 2020   
 Instructor: Antonio Miranda Garcia  
+
 <a href="https://drive.google.com/file/d/1aEFkpaR21fmXXmP0b3m6-VOEpEd5xemm/view?usp=sharing">CLICK HERE TO VIEW DEMO</a>  
+
 ### Description: 
 The purpose of this project was to create a online railway booking system application. This project utilized HTML for the user interface, MySQL for the database server, and Java, Javascript, and JDBC for connectivity between the user interface and database server. The database was hosted using AWS RDS and the web server was a tomcat server through AWS EC2. 
 
